@@ -41,7 +41,10 @@
                     packages = {
                         # Lets you run `nix run .` to start nixvim
                         default = nvim;
+                        lazygit = pkgs.lazygit;
+                        bpytop = pkgs.bpytop;
+                        nodejs_20 = pkgs.nodejs-20_x;
                     };
                 };
-        };
-}
+            };
+    }
