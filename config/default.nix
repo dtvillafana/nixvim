@@ -7,5 +7,7 @@
         ./autopairs.nix
         ./treesitter.nix
         ./toggleterm.nix
+        ./telescope.nix
+        ./options.nix
     ];
 }
