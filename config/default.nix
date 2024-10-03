@@ -7,6 +7,8 @@
         ./oil.nix
         ./whichkey.nix
         ./flash.nix
+        ./gitsigns.nix
+        ./indent-blankline.nix
         ./bufdelete.nix
         ./bufferline.nix
         ./catppuccin.nix
