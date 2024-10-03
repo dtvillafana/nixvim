@@ -6,6 +6,7 @@
         ./keymaps.nix
         ./oil.nix
         ./whichkey.nix
+        ./flash.nix
         ./bufdelete.nix
         ./bufferline.nix
         ./catppuccin.nix
