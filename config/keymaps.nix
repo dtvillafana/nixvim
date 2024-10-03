@@ -26,7 +26,6 @@
         { mode = "n"; key = "<C-Right>"; action = "<CMD>vertical resize +2<CR>"; options = { noremap = true; silent = true; }; }
         { mode = "n"; key = "<S-l>"; action = "<CMD>bnext<CR>"; options = { noremap = true; silent = true; }; }
         { mode = "n"; key = "<S-h>"; action = "<CMD>bprevious<CR>"; options = { noremap = true; silent = true; }; }
-        { mode = "n"; key = "<leader>bd"; action = "<CMD>Bdelete<CR>"; options = { noremap = true; silent = true; }; }
 
         # Navigate/Control tabs
         { mode = "n"; key = "<A-h>"; action = "<CMD>tabnext<CR>"; options = { noremap = true; silent = true; }; }
