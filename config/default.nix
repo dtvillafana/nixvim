@@ -4,6 +4,7 @@
         ./lsp.nix
         ./completion.nix
         ./keymaps.nix
+        ./bufdelete.nix
         ./telescope.nix
         ./dressing.nix
         ./lualine.nix
@@ -13,7 +14,6 @@
         ./gitsigns.nix
         ./todo-comments.nix
         ./indent-blankline.nix
-        ./bufdelete.nix
         ./bufferline.nix
         ./catppuccin.nix
         ./autopairs.nix

@@ -8,6 +8,7 @@
                 "<leader>fh" = "help_tags";
                 "<leader>lfd" = "diagnostics";
                 "<leader>fs" = "lsp_document_symbols";
+                "<leader>fb" = "buffers";
             };
         };
     };
