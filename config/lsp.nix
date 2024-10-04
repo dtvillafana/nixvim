@@ -27,7 +27,17 @@
 
             servers = {
                 nil-ls.enable = true;
-                lua-ls.enable = true;
+                lua-ls = {
+                    enable = true;
+                    settings = {
+                        telemetry.enable = false;
+                        diagnostics = {
+                            globals = [
+                                "vim"
+                            ];
+                        };
+                    };
+                };
                 pylsp.enable = true;
                 ansiblels.enable = true;
                 bashls.enable = true;
