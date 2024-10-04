@@ -1,8 +1,8 @@
 {
     keymaps = [
-        { mode = ["n" "x" "o"];action = ''<CMD>lua require("flash").jump()<CR>''; key = "s"; options = { noremap = true; silent = true; }; }
-        { mode = ["n" "x" "o"]; action = ''<CMD>lua require("flash").treesitter()<CR>''; key = "S"; options = { noremap = true; silent = true; }; }
-        { mode = ["o"]; action = ''<CMD>lua require("flash").remote()<CR>''; key = "r"; options = { noremap = true; silent = true; }; }
+        { mode = [ "n" "x" "o" ]; action = ''<CMD>lua require("flash").jump()<CR>''; key = "s"; options = { noremap = true; silent = true; }; }
+        { mode = [ "n" "x" "o" ]; action = ''<CMD>lua require("flash").treesitter()<CR>''; key = "S"; options = { noremap = true; silent = true; }; }
+        { mode = [ "o" ]; action = ''<CMD>lua require("flash").remote()<CR>''; key = "r"; options = { noremap = true; silent = true; }; }
     ];
     plugins = {
         flash = {
@@ -32,10 +32,10 @@
                     # Excluded filetypes and custom window filters
                     #-@type (string|fun(win:window))[]
                     exclude = [
-                        "notify" 
-                        "cmp_menu" 
+                        "notify"
+                        "cmp_menu"
                         "noice"
-                        "flash_prompt" 
+                        "flash_prompt"
                         ''function(win)
             # exclude non-focusable windows
             return not vim.api.nvim_win_get_config(win).focusable

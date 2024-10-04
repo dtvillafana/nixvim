@@ -48,5 +48,5 @@
                         pandoc = pkgs.pandoc;
                     };
                 };
-            };
-    }
+        };
+}

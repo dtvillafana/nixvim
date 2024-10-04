@@ -1,8 +1,8 @@
-{ pkgs, ...}:
-let 
-  org = builtins.getEnv "ORG";
+{ pkgs, ... }:
+let
+    org = builtins.getEnv "ORG";
 in
-{
+    {
     plugins = {
         orgmode = {
             enable = true;
@@ -27,20 +27,20 @@ in
                         label = "Export to standalone PDF";
 
                         action = ''
-                            function(exporter)
-                                local current_file = vim.api.nvim_buf_get_name(0)
-                                local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                                local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
-                                local on_success = function(output)
-                                    print('Success! exported to ' .. target)
-                                    vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
-                                end
-                                local on_error = function(err)
-                                    print('Error!')
-                                    vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
-                                end
-                                return exporter(command, target, on_success, on_error)
-                            end,
+                          function(exporter)
+                              local current_file = vim.api.nvim_buf_get_name(0)
+                              local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
+                              local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
+                              local on_success = function(output)
+                                  print('Success! exported to ' .. target)
+                                  vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
+                              end
+                              local on_error = function(err)
+                                  print('Error!')
+                                  vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
+                              end
+                              return exporter(command, target, on_success, on_error)
+                          end,
                         '';
                     };
                 };
@@ -124,23 +124,23 @@ in
 
     extraPlugins = [
         (pkgs.vimUtils.buildVimPlugin {
-        name = "org-roam";
-        src = pkgs.fetchFromGitHub {
-            owner = "chipsenkbeil";
-            repo = "org-roam.nvim";
-            rev = "master";
-            hash = "sha256-gONxa/CUXPgV+ucC+WkEyeH/lFAiTaQx8bEBq7g6HyY=";
-        };
-    })
+            name = "org-roam";
+            src = pkgs.fetchFromGitHub {
+                owner = "chipsenkbeil";
+                repo = "org-roam.nvim";
+                rev = "master";
+                hash = "sha256-gONxa/CUXPgV+ucC+WkEyeH/lFAiTaQx8bEBq7g6HyY=";
+            };
+        })
         (pkgs.vimUtils.buildVimPlugin {
-        name = "telescope-orgmode";
-        src = pkgs.fetchFromGitHub {
-            owner = "nvim-orgmode";
-            repo = "telescope-orgmode.nvim";
-            rev = "master";
-            hash = "sha256-yeGdy1aip4TZKp++MuSo+kxo+XhFsOT0yv+9xJpKEps=";
-        };
-    })
+            name = "telescope-orgmode";
+            src = pkgs.fetchFromGitHub {
+                owner = "nvim-orgmode";
+                repo = "telescope-orgmode.nvim";
+                rev = "master";
+                hash = "sha256-yeGdy1aip4TZKp++MuSo+kxo+XhFsOT0yv+9xJpKEps=";
+            };
+        })
     ];
     extraConfigLua = ''
         require('org-roam').setup({
@@ -162,5 +162,5 @@ in
                 vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
             end,
         })
-    '';
+        '';
 }

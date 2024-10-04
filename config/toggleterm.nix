@@ -32,27 +32,48 @@
         };
     };
     keymaps = [
-        { mode = "n"; key = "<leader>tf";
+        {
+            mode = "n";
+            key = "<leader>tf";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ hidden = true, direction = 'float', id = vim.v.count, display_name = 'Terminal ' .. vim.v.count, }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>tv";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>tv";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ hidden = true, direction = 'vertical', id = vim.v.count + 10, display_name = 'Terminal ' .. vim.v.count, }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>th";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>th";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ hidden = true, direction = 'horizontal', id = vim.v.count + 20, display_name = 'Terminal ' .. vim.v.count, }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>tt";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>tt";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ hidden = true, direction = 'tab', id = vim.v.count + 30, display_name = 'Terminal ' .. vim.v.count, }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>tl";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>tl";
             action = ''<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit', hidden = true, close_on_exit = true, direction = 'float', dir = directory, display_name = 'lazygit', }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>tb";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>tb";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'bpytop', hidden = true, close_on_exit = true, direction = 'float', display_name = 'bpytop' }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
-        { mode = "n"; key = "<leader>tj";
+            options = { noremap = true; silent = true; };
+        }
+        {
+            mode = "n";
+            key = "<leader>tj";
             action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'nodejs', hidden = true, close_on_exit = true, direction = 'float', display_name = 'nodejs' }):toggle()<CR>'';
-            options = { noremap = true; silent = true; }; }  
+            options = { noremap = true; silent = true; };
+        }
     ];
     autoCmd = [
         {

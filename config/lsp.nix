@@ -1,6 +1,6 @@
 {
     plugins = {
-        lsp-format.enable = true;
+        # lsp-format.enable = true;
 
         lsp = {
             enable = true;
@@ -25,13 +25,23 @@
             };
 
             servers = {
-                rnix-lsp.enable = true;
+                nil-ls.enable = true;
+                lua-ls.enable = true;
                 pylsp.enable = true;
+                ansiblels.enable = true;
+                bashls.enable = true;
+                cmake.enable = true;
+                htmx.enable = true;
+                html.enable = true;
+                jsonls.enable = true;
+                lemminx.enable = true;
+                tailwindcss.enable = true;
+                ts-ls.enable = true;
+
             };
         };
         lspsaga = {
             enable = true;
-
         };
     };
 }
