@@ -4,10 +4,14 @@
         ./lsp.nix
         ./completion.nix
         ./keymaps.nix
+        ./telescope.nix
+        ./dressing.nix
+        ./lualine.nix
         ./oil.nix
         ./whichkey.nix
         ./flash.nix
         ./gitsigns.nix
+        ./todo-comments.nix
         ./indent-blankline.nix
         ./bufdelete.nix
         ./bufferline.nix
@@ -15,12 +19,14 @@
         ./autopairs.nix
         ./treesitter.nix
         ./toggleterm.nix
-        ./telescope.nix
         ./options.nix
         ./noice.nix
         ./nvimtree.nix
         ./omen.nix
         ./comment.nix
-        ./orgmode.nix
+        ./org.nix
+        ./rainbow-delimiters.nix
+        ./scope.nix
+        ./sessions.nix
     ];
 }

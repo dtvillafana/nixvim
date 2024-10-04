@@ -1,3 +1,4 @@
+{ pkgs, ...}:
 let 
   org = builtins.getEnv "ORG";
 in
@@ -6,7 +7,7 @@ in
         orgmode = {
             enable = true;
             settings = {
-                org_agenda_files = "${org}/*";
+                org_agenda_files = "${org}/**/*";
                 org_default_notes_file = "${org}/refile.org";
                 org_hide_emphasis_markers = true;
                 org_todo_keywords = [
@@ -120,4 +121,46 @@ in
             };
         };
     };
+
+    extraPlugins = [
+        (pkgs.vimUtils.buildVimPlugin {
+        name = "org-roam";
+        src = pkgs.fetchFromGitHub {
+            owner = "chipsenkbeil";
+            repo = "org-roam.nvim";
+            rev = "master";
+            hash = "sha256-gONxa/CUXPgV+ucC+WkEyeH/lFAiTaQx8bEBq7g6HyY=";
+        };
+    })
+        (pkgs.vimUtils.buildVimPlugin {
+        name = "telescope-orgmode";
+        src = pkgs.fetchFromGitHub {
+            owner = "nvim-orgmode";
+            repo = "telescope-orgmode.nvim";
+            rev = "master";
+            hash = "sha256-yeGdy1aip4TZKp++MuSo+kxo+XhFsOT0yv+9xJpKEps=";
+        };
+    })
+    ];
+    extraConfigLua = ''
+        require('org-roam').setup({
+            directory = '${org}/roam',
+        })
+
+
+        local status_ok, telescope = pcall(require, 'telescope')
+        if not status_ok then
+            return
+        end
+        telescope.load_extension('orgmode')
+        vim.keymap.set('n', '<leader>oh', telescope.extensions.orgmode.search_headings)
+        vim.keymap.set('n', '<leader>ol', telescope.extensions.orgmode.insert_link)
+        vim.api.nvim_create_autocmd('FileType', {
+            pattern = 'org',
+            group = vim.api.nvim_create_augroup('orgmode_telescope_nvim', { clear = true }),
+            callback = function()
+                vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
+            end,
+        })
+    '';
 }

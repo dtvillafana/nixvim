@@ -35,10 +35,6 @@
         # remove highlighting
         { mode = "n"; key = "<leader>hr"; action = "<CMD>nohl<CR>"; options = { noremap = true; silent = true; }; }
 
-        # Telescope
-        { mode = "n"; key = "<leader>ff"; action = "<CMD>Telescope find_files<CR>"; options = { noremap = true; silent = true; }; }
-        { mode = "n"; key = "<leader>fg"; action = "<CMD>Telescope live_grep<CR>"; options = { noremap = true; silent = true; }; }
-
         # file tree
         { mode = "n"; key = "<leader>v"; action = "<CMD>NvimTreeToggle<CR>"; options = { noremap = true; silent = true; }; }
 
