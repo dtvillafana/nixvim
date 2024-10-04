@@ -45,6 +45,7 @@
                         bpytop = pkgs.bpytop;
                         nodejs_20 = pkgs.nodejs-20_x;
                         ripgrep = pkgs.ripgrep;
+                        pandoc = pkgs.pandoc;
                     };
                 };
             };

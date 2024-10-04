@@ -17,5 +17,10 @@
         ./toggleterm.nix
         ./telescope.nix
         ./options.nix
+        ./noice.nix
+        ./nvimtree.nix
+        ./omen.nix
+        ./comment.nix
+        ./orgmode.nix
     ];
 }

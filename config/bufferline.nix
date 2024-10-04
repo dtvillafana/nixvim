@@ -1,6 +1,12 @@
 {
-  plugins = {
-    bufferline.enable = true;
-    web-devicons.enable = true;
-  };
+    plugins = {
+        bufferline = {
+            enable = true;
+            settings = {
+                options = {
+                    buffer_close_icon = "";
+                };
+            };
+        };
+    };
 }

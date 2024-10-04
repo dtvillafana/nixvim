@@ -18,6 +18,8 @@
             '';
             settings = {
                 indent = {
+                    char = "┊";
+                    tab_char = "┊";
                     highlight = [
                         "RainbowRed"
                         "RainbowYellow"
