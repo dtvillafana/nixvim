@@ -9,6 +9,7 @@
                 "<leader>lfd" = "diagnostics";
                 "<leader>fs" = "lsp_document_symbols";
                 "<leader>fb" = "buffers";
+                "<leader>fk" = "keymaps";
             };
         };
     };
