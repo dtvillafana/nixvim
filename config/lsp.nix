@@ -1,7 +1,5 @@
 {
     plugins = {
-        # lsp-format.enable = true;
-
         lsp = {
             enable = true;
 
@@ -39,7 +37,6 @@
                     };
                 };
                 pylsp.enable = true;
-                ansiblels.enable = true;
                 bashls.enable = true;
                 cmake.enable = true;
                 htmx.enable = true;
@@ -48,11 +45,28 @@
                 lemminx.enable = true;
                 tailwindcss.enable = true;
                 ts-ls.enable = true;
+                ansiblels = {
+                    enable = true;
+                    filetypes = [
+                        "yaml.ansible"
+                    ];
+                    settings.ansible = {
+                        validation.enabled = false;
+                        executionEnvironment.enabled = false;
+                    };
+                };
 
             };
         };
         lspsaga = {
             enable = true;
+        };
+    };
+    filetype = {
+        pattern = {
+            ".*inventory" = "yaml.ansible";
+            ".*playbook.yml" = "yaml.ansible";
+            ".*config.yml" = "yaml.ansible";
         };
     };
 }
