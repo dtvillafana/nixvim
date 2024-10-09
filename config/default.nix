@@ -28,5 +28,6 @@
         ./rainbow-delimiters.nix
         ./scope.nix
         ./sessions.nix
+        ./surround.nix
     ];
 }

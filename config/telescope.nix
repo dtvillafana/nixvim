@@ -11,6 +11,8 @@
                 "<leader>fb" = "buffers";
                 "<leader>fk" = "keymaps";
                 "<leader>fm" = "toggleterm_manager";
+                "<leader>ldf" = "diagnostics";
+                "<leader>fn" = "notify";
             };
         };
     };

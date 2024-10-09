@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
     org = builtins.getEnv "ORG";
 in
@@ -25,8 +25,7 @@ in
                 org_custom_exports = {
                     f = {
                         label = "Export to standalone PDF";
-
-                        action = ''
+                        action = lib.generators.mkLuaInline ''
                           function(exporter)
                               local current_file = vim.api.nvim_buf_get_name(0)
                               local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
@@ -40,7 +39,7 @@ in
                                   vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
                               end
                               return exporter(command, target, on_success, on_error)
-                          end,
+                          end
                         '';
                     };
                 };

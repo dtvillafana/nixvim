@@ -18,7 +18,6 @@
                     { mode = "n"; key = "<leader>lh"; action = "<CMD>Lspsaga hover_doc<CR>"; }
                     { mode = "n"; key = "<leader>lt"; action = "<CMD>Lspsaga goto_type_definition<CR>"; }
                     { mode = "n"; key = "<leader>lo"; action = "<CMD>Lspsaga outline<CR>"; }
-                    { mode = "n"; key = "<leader>ldv"; action = "<CMD>Lspsaga show_buf_diagnostics<CR>"; }
                     { mode = "n"; key = "<leader>l"; action = "<CMD>Lspsaga code_action<CR>"; }
                 ];
             };
