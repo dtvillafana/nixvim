@@ -53,7 +53,7 @@
         { mode = "v"; key = ">"; action = ">gv"; options = { noremap = true; silent = true; }; }
 
         # cd to current dir
-        { mode = "n"; key = "<leader>rc"; action = "<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); local command = 'cd ' .. directory; vim.api.nvim_exec2(command, { output = false });<CR>"; options = { noremap = true; silent = true; }; }
+        { mode = "n"; key = "<leader>rc"; action = "<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); local command = 'cd ' .. directory; vim.api.nvim_exec2(command, { output = false });<CR><CMD>sleep! 400m<CR><CMD>LspRestart<CR>"; options = { noremap = true; silent = true; }; }
 
         # dismiss notifications
         { mode = "n"; key = "<leader>pd"; action = "<CMD>NoiceDismiss<CR>"; options = { noremap = true; silent = true; }; }

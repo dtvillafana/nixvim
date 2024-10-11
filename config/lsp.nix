@@ -1,5 +1,6 @@
 {
     plugins = {
+        direnv.enable = true;
         lsp = {
             enable = true;
 
@@ -35,7 +36,17 @@
                         };
                     };
                 };
-                pylsp.enable = true;
+                pylsp = {
+                    enable = true;
+                    settings = {
+                        plugins = {
+                            autopep8.enabled = true;
+                            pycodestyle = {
+                                ignore = [ "E501" "W503" ];
+                            };
+                        };
+                    };
+                };
                 bashls.enable = true;
                 cmake.enable = true;
                 htmx.enable = true;
