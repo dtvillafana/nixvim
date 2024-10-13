@@ -24,8 +24,8 @@
             };
 
             servers = {
-                nil-ls.enable = true;
-                lua-ls = {
+                nil_ls.enable = true;
+                lua_ls = {
                     enable = true;
                     settings = {
                         telemetry.enable = false;
@@ -54,7 +54,7 @@
                 jsonls.enable = true;
                 lemminx.enable = true;
                 tailwindcss.enable = true;
-                ts-ls.enable = true;
+                ts_ls.enable = true;
                 ansiblels = {
                     enable = true;
                     filetypes = [
