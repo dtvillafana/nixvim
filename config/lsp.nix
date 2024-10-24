@@ -25,7 +25,10 @@
             };
 
             servers = {
-                nil_ls.enable = true;
+                nixd = {
+                    enable = true;
+                    settings.nixd.formatting.command = "alejandra";
+                };
                 lua_ls = {
                     enable = true;
                     settings = {

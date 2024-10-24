@@ -27,6 +27,7 @@
                         module = {
                             imports =  [ ./config ]; # import the module directly
                             extraPackages = with pkgs; [
+                                alejandra
                                 lazygit
                                 btop
                                 nodejs-18_x
