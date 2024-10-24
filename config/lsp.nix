@@ -20,6 +20,9 @@
                     { mode = "n"; key = "<leader>lt"; action = "<CMD>Lspsaga goto_type_definition<CR>"; }
                     { mode = "n"; key = "<leader>lo"; action = "<CMD>Lspsaga outline<CR>"; }
                     { mode = "n"; key = "<leader>lc"; action = "<CMD>Lspsaga code_action<CR>"; }
+                    { mode = "n"; key = "<leader>lx"; action = "<CMD>lua require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = 'off' } } } })<CR>"; }
+
+
                 ];
             };
 
@@ -36,16 +39,8 @@
                         };
                     };
                 };
-                pylsp = {
+                basedpyright = {
                     enable = true;
-                    settings = {
-                        plugins = {
-                            autopep8.enabled = true;
-                            pycodestyle = {
-                                ignore = [ "E501" "W503" ];
-                            };
-                        };
-                    };
                 };
                 bashls.enable = true;
                 cmake.enable = true;
