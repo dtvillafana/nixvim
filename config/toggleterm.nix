@@ -68,7 +68,7 @@
         {
             mode = "n";
             key = "<leader>tb";
-            action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'bpytop', hidden = true, close_on_exit = true, direction = 'float', display_name = 'bpytop' }):toggle()<CR>'';
+            action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'btop', hidden = true, close_on_exit = true, direction = 'float', display_name = 'bpytop' }):toggle()<CR>'';
             options = { noremap = true; silent = true; };
         }
         {
