@@ -24,7 +24,16 @@
                     nixvim' = nixvim.legacyPackages.${system};
                     nixvimModule = {
                         inherit pkgs;
-                        module = import ./config; # import the module directly
+                        module = {
+                            imports =  [ ./config ]; # import the module directly
+                            extraPackages = with pkgs; [
+                                lazygit
+                                btop
+                                nodejs-18_x
+                                ripgrep
+                                pandoc
+                            ];
+                        };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
                         extraSpecialArgs = {
                             # inherit (inputs) foo;
@@ -41,11 +50,6 @@
                     packages = {
                         # Lets you run `nix run .` to start nixvim
                         default = nvim;
-                        lazygit = pkgs.lazygit;
-                        bpytop = pkgs.btop;
-                        nodejs_20 = pkgs.nodejs-18_x;
-                        ripgrep = pkgs.ripgrep;
-                        pandoc = pkgs.pandoc;
                     };
                 };
         };

@@ -21,8 +21,6 @@
                     { mode = "n"; key = "<leader>lo"; action = "<CMD>Lspsaga outline<CR>"; }
                     { mode = "n"; key = "<leader>lc"; action = "<CMD>Lspsaga code_action<CR>"; }
                     { mode = "n"; key = "<leader>lx"; action = "<CMD>lua require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = 'off' } } } })<CR>"; }
-
-
                 ];
             };
 
