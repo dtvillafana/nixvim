@@ -1,14 +1,11 @@
-{ pkgs, lib, ... }:
-let
-    org = builtins.getEnv "ORG";
-in
-    {
+{ pkgs, lib, orgPath ? "~/git-repos/orgfiles/", ... }:
+{
     plugins = {
         orgmode = {
             enable = true;
             settings = {
-                org_agenda_files = "${org}/**/*";
-                org_default_notes_file = "${org}/refile.org";
+                org_agenda_files = if orgPath != null then "${orgPath}**/*" else "";
+                org_default_notes_file = if orgPath != null then "${orgPath}refile.org" else "";
                 org_hide_emphasis_markers = true;
                 org_todo_keywords = [
                     "TODO(t)"
@@ -143,7 +140,7 @@ in
     ];
     extraConfigLua = ''
         require('org-roam').setup({
-            directory = '${org}/roam',
+            directory = '${if orgPath != null then "${orgPath}roam" else ""}',
         })
 
 
@@ -161,5 +158,5 @@ in
                 vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
             end,
         })
-        '';
+    '';
 }

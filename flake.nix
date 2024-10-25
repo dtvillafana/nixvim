@@ -38,6 +38,8 @@
                         extraSpecialArgs = {
                             system = system;
                             pkgs = pkgs;
+                            orgPath = "/home/vir/git-repos/orgfiles/";
+                            omenPath = "/home/vir/.local/share/gopass/";
                             # inherit (inputs) foo;
                         };
                     };

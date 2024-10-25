@@ -1,3 +1,4 @@
+{orgPath, omenPath, ...}:
 {
     # Import all your configuration modules here
     imports = [
