@@ -1,5 +1,5 @@
 { pkgs, omenPath, ... }:
-{
+if omenPath == null then {} else {
     extraPlugins = [
         (pkgs.vimUtils.buildVimPlugin {
             name = "omen";
@@ -15,7 +15,7 @@
     require('omen').setup({
         picker = 'telescope', -- Picker type
         title = 'Omen', -- Title to be displayed on the picker
-        store = '${if omenPath != null then omenPath else ""}',
+        store = '${omenPath}',
         passphrase_prompt = 'Passphrase: ', -- Prompt when asking the passphrase
         register = '+', -- Which register to fill after decoding a password
         retention = 45, -- Delay before password is cleared from the register

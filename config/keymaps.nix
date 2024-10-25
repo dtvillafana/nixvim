@@ -35,9 +35,6 @@
         # remove highlighting
         { mode = "n"; key = "<leader>hr"; action = "<CMD>nohl<CR>"; options = { noremap = true; silent = true; }; }
 
-        # file tree
-        { mode = "n"; key = "<leader>v"; action = "<CMD>NvimTreeToggle<CR>"; options = { noremap = true; silent = true; }; }
-
         # quick escape from insert mode
         { mode = "i"; key = "jk"; action = "<ESC>"; options = { noremap = true; silent = true; }; }
         { mode = "i"; key = "kj"; action = "<ESC>"; options = { noremap = true; silent = true; }; }
@@ -54,8 +51,5 @@
 
         # cd to current dir
         { mode = "n"; key = "<leader>rc"; action = "<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); local command = 'cd ' .. directory; vim.api.nvim_exec2(command, { output = false });<CR><CMD>sleep! 400m<CR><CMD>LspRestart<CR>"; options = { noremap = true; silent = true; }; }
-
-        # dismiss notifications
-        { mode = "n"; key = "<leader>pd"; action = "<CMD>NoiceDismiss<CR>"; options = { noremap = true; silent = true; }; }
     ];
 }

@@ -32,14 +32,15 @@
                                 nodejs-18_x
                                 ripgrep
                                 pandoc
+                                direnv
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
                         extraSpecialArgs = {
                             system = system;
                             pkgs = pkgs;
-                            orgPath = "/home/vir/git-repos/orgfiles/";
-                            omenPath = "/home/vir/.local/share/gopass/";
+                            orgPath = null;
+                            omenPath = null;
                             # inherit (inputs) foo;
                         };
                     };

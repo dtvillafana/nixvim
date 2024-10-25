@@ -1,11 +1,12 @@
 { pkgs, lib, orgPath ? "~/git-repos/orgfiles/", ... }:
-{
+if orgPath == null then {} else 
+    {
     plugins = {
         orgmode = {
             enable = true;
             settings = {
-                org_agenda_files = if orgPath != null then "${orgPath}**/*" else "";
-                org_default_notes_file = if orgPath != null then "${orgPath}refile.org" else "";
+                org_agenda_files = "${orgPath}**/*";
+                org_default_notes_file = "${orgPath}refile.org";
                 org_hide_emphasis_markers = true;
                 org_todo_keywords = [
                     "TODO(t)"
@@ -140,7 +141,7 @@
     ];
     extraConfigLua = ''
         require('org-roam').setup({
-            directory = '${if orgPath != null then "${orgPath}roam" else ""}',
+            directory = '${orgPath}roam}',
         })
 
 
@@ -158,5 +159,5 @@
                 vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
             end,
         })
-    '';
+            '';
 }
