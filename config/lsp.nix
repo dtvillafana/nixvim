@@ -1,3 +1,4 @@
+{ system, ... }:
 {
     plugins = {
         direnv.enable = true;
@@ -23,11 +24,13 @@
                     { mode = "n"; key = "<leader>lx"; action = "<CMD>lua require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = 'off' } } } })<CR>"; }
                 ];
             };
-
             servers = {
                 nixd = {
                     enable = true;
-                    settings.nixd.formatting.command = "alejandra";
+                    settings = {
+                        formatting.command = [ "alejandra" ];
+                        options.nixvim.expr = ''(builtins.getFlake ../. ).packages.${system}.neovimNixvim.options''; 
+                    };
                 };
                 lua_ls = {
                     enable = true;
