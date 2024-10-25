@@ -22,9 +22,7 @@
         ./options.nix
         ./noice.nix
         ./nvimtree.nix
-        ./omen.nix
         ./comment.nix
-        ./org.nix
         ./rainbow-delimiters.nix
         ./scope.nix
         ./sessions.nix
