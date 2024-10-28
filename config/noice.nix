@@ -11,7 +11,7 @@
         };
         noice = {
             enable = true;
-            presets = {
+            settings.presets = {
                 command_palette = true;
             };
         };
