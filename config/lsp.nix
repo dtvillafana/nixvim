@@ -1,7 +1,10 @@
-{ system, ... }:
+{ system, pkgs, ... }:
 {
     plugins = {
-        direnv.enable = true;
+        direnv = {
+            enable = true;
+            direnvPackage = pkgs.nix-direnv;
+        };
         lsp = {
             enable = true;
 

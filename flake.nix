@@ -32,7 +32,7 @@
                                 nodejs-18_x
                                 ripgrep
                                 pandoc
-                                direnv
+                                nix-direnv
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
