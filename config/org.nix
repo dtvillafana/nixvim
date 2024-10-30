@@ -141,7 +141,7 @@ if orgPath == null then {} else
     ];
     extraConfigLua = ''
         require('org-roam').setup({
-            directory = '${orgPath}roam}',
+            directory = '${orgPath}roam',
         })
 
 
