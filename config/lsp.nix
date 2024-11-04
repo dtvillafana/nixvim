@@ -49,7 +49,15 @@
                 basedpyright = {
                     enable = true;
                 };
-                bashls.enable = true;
+                bashls = {
+                    enable = true;
+                    filetypes = [
+                        "zsh"
+                        "sh"
+                        "bash"
+                        "ksh"
+                    ];
+                };
                 cmake.enable = true;
                 htmx.enable = true;
                 html.enable = true;
