@@ -59,7 +59,6 @@
                     ];
                 };
                 cmake.enable = true;
-                htmx.enable = true;
                 html.enable = true;
                 jsonls.enable = true;
                 lemminx.enable = true;
