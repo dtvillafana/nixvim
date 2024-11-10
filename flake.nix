@@ -28,6 +28,7 @@
                             extraPackages = with pkgs; [
                                 alejandra
                                 lazygit
+                                diff-so-fancy
                                 btop
                                 nodejs-18_x
                                 ripgrep
