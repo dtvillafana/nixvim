@@ -38,7 +38,7 @@
         swapfile = false; # creates a swapfile
         tabstop = 4; # number of spaces that make up a tab
         termguicolors = true; # set term gui colors (most terminals support this)
-        timeoutlen = 1000; # time to wait for a mapped sequence to complete (in milliseconds)
+        timeoutlen = 200; # time to wait for a mapped sequence to complete (in milliseconds)
         undofile = true; # enable persistent undo
         updatetime = 300; # faster completion (4000ms default)
         wrap = true; # wrap lines that are too long to display on the screen
