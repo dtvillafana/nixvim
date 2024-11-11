@@ -34,6 +34,7 @@
                                 ripgrep
                                 pandoc
                                 nix-direnv
+                                xclip
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
