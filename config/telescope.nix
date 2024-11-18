@@ -13,6 +13,7 @@
                 "<leader>fm" = "toggleterm_manager";
                 "<leader>ldf" = "diagnostics";
                 "<leader>fn" = "notify";
+                "<leader>fq" = "quickfix";
             };
         };
     };
