@@ -70,7 +70,6 @@
                         "yaml.ansible"
                     ];
                     settings.ansible = {
-                        validation.enabled = false;
                         executionEnvironment.enabled = false;
                     };
                 };

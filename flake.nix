@@ -35,6 +35,7 @@
                                 pandoc
                                 nix-direnv
                                 xclip
+                                ansible-lint
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
