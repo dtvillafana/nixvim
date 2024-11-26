@@ -13,7 +13,7 @@ sh <(curl -L https://nixos.org/nix/install) --daemon
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 ```
 # running nixvim
-this will take a while to install all dependencies the first time, subsequent times it will be nearly instant
+this will take a while to install all dependencies the first time, subsequent times it will be fast
 ```sh
 nix run github:dtvillafana/nixvim
 ```
