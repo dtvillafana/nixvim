@@ -126,7 +126,7 @@ if orgPath == null then {} else
                 owner = "chipsenkbeil";
                 repo = "org-roam.nvim";
                 rev = "master";
-                hash = "sha256-gONxa/CUXPgV+ucC+WkEyeH/lFAiTaQx8bEBq7g6HyY=";
+                hash = "sha256-R+5vbvOMVlLfPx5xmmx2cG0p+FhO3gFBpVZFvVwJDfM=";
             };
         })
         (pkgs.vimUtils.buildVimPlugin {
