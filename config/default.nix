@@ -30,5 +30,6 @@
         ./scope.nix
         ./sessions.nix
         ./surround.nix
+        ./presenting.nix
     ];
 }
