@@ -31,5 +31,6 @@
         ./sessions.nix
         ./surround.nix
         ./presenting.nix
+        ./dadbod.nix
     ];
 }
