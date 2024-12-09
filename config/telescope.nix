@@ -15,6 +15,7 @@
                 "<leader>fn" = "notify";
                 "<leader>fq" = "quickfix";
                 "<leader>fx" = "manix";
+                "<leader>fc" = "command_history";
             };
             extensions.manix.enable = true;
             luaConfig.post = ''
