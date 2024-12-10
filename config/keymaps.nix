@@ -51,5 +51,8 @@
 
         # cd to current dir
         { mode = "n"; key = "<leader>re"; action = "<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); local command = 'cd ' .. directory; vim.api.nvim_exec2(command, { output = false });<CR><CMD>sleep! 400m<CR><CMD>LspRestart<CR>"; options = { noremap = true; silent = true; }; }
+
+        # saved macros
+        { mode = "n"; key = "<leader>mx"; action = ":%s/\\r/<CR>:%s/.*<!.*-->.*\\n/<CR>:%s/>?</></g<CR>:%!xmlformat -<CR>"; options = { noremap = true; silent = true; }; }
     ];
 }

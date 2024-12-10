@@ -27,6 +27,7 @@
         ./comment.nix
         ./org.nix
         ./rainbow-delimiters.nix
+        ./rainbow-csv.nix
         ./scope.nix
         ./sessions.nix
         ./surround.nix

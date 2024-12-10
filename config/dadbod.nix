@@ -15,7 +15,7 @@
                 key = 'fics-test',
                 value_func = function(var)
                     -- to make sql server work you might have to URL encode special characters and/or add some parameters to the end of your connection string:
-                    return 'sqlserver://sa:'
+                    return 'sqlserver://fics:'
                         .. var
                         .. '@172.20.102.60:1433/fics_test?Encrypt=1;trustServerCertificate=1'
                 end,
