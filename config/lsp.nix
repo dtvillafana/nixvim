@@ -29,6 +29,7 @@
                 ];
             };
             servers = {
+                elixirls.enable = true;
                 jdtls.enable = true;
                 nixd = {
                     enable = true;

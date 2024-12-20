@@ -37,9 +37,9 @@
                         "noice"
                         "flash_prompt"
                         ''function(win)
-            # exclude non-focusable windows
-            return not vim.api.nvim_win_get_config(win).focusable
-            end''
+                            # exclude non-focusable windows
+                            return not vim.api.nvim_win_get_config(win).focusable
+                          end''
                     ];
                     # Optional trigger character that needs to be typed before
                     # a jump label can be used. It"s NOT recommended to set this;
@@ -130,7 +130,7 @@
                     search = {
                         # when `true`; flash will be activated during regular search by default.
                         # You can always toggle when searching with `require("flash").toggle()`
-                        enabled = true;
+                        enabled = false;
                         jump = { history = true; register = true; nohlsearch = true; };
                         search = {
                             # `forward` will be automatically set to the search direction
