@@ -133,6 +133,14 @@
         };
         lspsaga = {
             enable = true;
+            outline = {
+                closeAfterJump = true;
+                layout = "float";
+                keys = {
+                    jump = "gd";
+                    toggleOrJump = "<CR>";
+                };
+            };
         };
     };
     filetype = {
