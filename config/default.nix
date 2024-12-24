@@ -33,5 +33,6 @@
         ./surround.nix
         ./presenting.nix
         ./dadbod.nix
+        ./render-markdown.nix
     ];
 }

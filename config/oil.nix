@@ -2,7 +2,10 @@
     plugins = {
         oil = {
             enable = true;
-            settings.view_options.show_hidden = true;
+            settings = {
+                view_options.show_hidden = true;
+                delete_to_trash = true;
+            };
         };
     };
     keymaps = [

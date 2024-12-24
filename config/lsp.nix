@@ -119,6 +119,7 @@
                     ];
                 };
                 ts_ls.enable = true;
+                clangd.enable = true;
                 ansiblels = {
                     enable = true;
                     filetypes = [
