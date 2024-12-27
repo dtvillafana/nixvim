@@ -2,6 +2,7 @@
     plugins = {
         luasnip.enable = true;
 
+        cmp-async-path.enable = true;
         cmp = {
             enable = true;
             autoEnableSources = true;
@@ -27,7 +28,7 @@
                 };
 
                 sources = [
-                    { name = "path"; }
+                    { name = "async_path"; }
                     { name = "nvim_lsp"; }
                     { name = "luasnip"; }
                     {
@@ -35,7 +36,6 @@
                         # Words from other open buffers can also be suggested.
                         option.get_bufnrs.__raw = "vim.api.nvim_list_bufs";
                     }
-                    { name = "luasnip"; }
                 ];
             };
         };
