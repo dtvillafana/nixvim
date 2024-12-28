@@ -3,11 +3,12 @@ let
     treesitter-poweron = pkgs.tree-sitter.buildGrammar {
         language = "poweron";
         version = "0.0.1+rev=main";
+        generate = true;
         src = pkgs.fetchFromGitHub {
             owner = "dtvillafana";
             repo = "tree-sitter-poweron";
             rev = "main";
-            hash = "sha256-QMPww9Fa+z6/wISQXVSIX2go6GoYdG8apHZGiRbXhms=";
+            hash = "sha256-ZHtcheIojmbTHmhJcZdSevcOk1Z6CQTqvwJ/bgoIwqI=";
         };
         meta.homepage = "https://github.com/dtvillafana/tree-sitter-poweron";
     };
@@ -44,28 +45,26 @@ in
                     enable = true;
                 };
             };
-            luaConfig.post =
-                ''
-                local git_user = 'dtvillafana'
-                local git_repo = 'tree-sitter-poweron'
-                local git_repo_url = 'https://github.com/' .. git_user .. '/' .. git_repo
-                local parsers = require('nvim-treesitter.parsers').get_parser_configs()
-                local poweron = {
-                    install_info = {
-                        url = git_repo_url,
-                        files = { 'src/parser.c', 'src/scanner.cc' },
-                        branch = 'main',
-                        generate_requires_npm = false,
-                        requires_generate_from_grammar = false,
-                    },
-                    filetype = 'poweron'
-                }
-                table.insert(parsers, poweron)
-                vim.treesitter.language.register('poweron', {
-                    'poweron',
-                    'po'
-                })
-                '';
+            # luaConfig.post =
+            #     ''
+            #     do
+            #         local parsers = require('nvim-treesitter.parsers').get_parser_configs()
+            #         parsers.poweron = {
+            #             install_info = {
+            #                 url = "${builtins.trace treesitter-poweron treesitter-poweron}",
+            #                 files = { 'src/parser.c', 'src/scanner.cc' },
+            #                 -- branch = 'main',
+            #                 generate_requires_npm = false,
+            #                 requires_generate_from_grammar = true,
+            #             },
+            #             filetype = 'poweron'
+            #         }
+            #         vim.treesitter.language.register('poweron', {
+            #             'poweron',
+            #             'po'
+            #         })
+            #     end
+            #     '';
         };
     };
     filetype = {
