@@ -25,7 +25,7 @@
                     { mode = "n"; key = "<leader>lc"; action = "<CMD>Lspsaga code_action<CR>"; }
                     { mode = "n"; key = "<leader>ldj"; action = "<CMD>Lspsaga diagnostic_jump_next<CR>"; }
                     { mode = "n"; key = "<leader>ldk"; action = "<CMD>Lspsaga diagnostic_jump_prev<CR>"; }
-                    { mode = "n"; key = "<leader>lx"; action = "<CMD>lua require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = 'off' } } } })<CR>"; }
+                    { mode = "n"; key = "<leader>lx"; action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off' }}}})<CR>"; }
                 ];
             };
             servers = {
@@ -151,4 +151,7 @@
             ".*config.yml" = "yaml.ansible";
         };
     };
+    extraConfigLua = ''
+        vim.g.type_checking = true;
+    '';
 }
