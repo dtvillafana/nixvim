@@ -16,6 +16,7 @@
                 "<leader>fq" = "quickfix";
                 "<leader>fx" = "manix";
                 "<leader>fc" = "command_history";
+                "<leader>/" = "current_buffer_fuzzy_find";
             };
             extensions.manix.enable = true;
             luaConfig.post = ''
