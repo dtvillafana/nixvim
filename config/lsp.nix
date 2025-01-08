@@ -5,6 +5,12 @@
             enable = true;
             direnvPackage = pkgs.nix-direnv;
         };
+        telescope.keymaps = {
+                "<leader>lf" = "lsp_references";
+                "<leader>lg" = "lsp_definitions";
+                "<leader>lci" = "lsp_incoming_calls";
+                "<leader>lco" = "lsp_outgoing_calls";
+        };
         lsp = {
             enable = true;
 
@@ -17,12 +23,11 @@
 
                 extra = [
                     { mode = "n"; key = "<leader>lr"; action = "<CMD>Lspsaga rename<CR>"; }
-                    { mode = "n"; key = "<leader>lg"; action = "<CMD>Lspsaga goto_definition<CR>"; }
                     { mode = "n"; key = "<leader>lp"; action = "<CMD>Lspsaga peek_definition<CR>"; }
                     { mode = "n"; key = "<leader>lh"; action = "<CMD>Lspsaga hover_doc<CR>"; }
                     { mode = "n"; key = "<leader>lt"; action = "<CMD>Lspsaga goto_type_definition<CR>"; }
                     { mode = "n"; key = "<leader>lo"; action = "<CMD>Lspsaga outline<CR>"; }
-                    { mode = "n"; key = "<leader>lc"; action = "<CMD>Lspsaga code_action<CR>"; }
+                    { mode = "n"; key = "<leader>la"; action = "<CMD>Lspsaga code_action<CR>"; }
                     { mode = "n"; key = "<leader>ldj"; action = "<CMD>Lspsaga diagnostic_jump_next<CR>"; }
                     { mode = "n"; key = "<leader>ldk"; action = "<CMD>Lspsaga diagnostic_jump_prev<CR>"; }
                     { mode = "n"; key = "<leader>lx"; action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; require('lspconfig').basedpyright.setup({settings = { basedpyright = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off' }}}})<CR>"; }
