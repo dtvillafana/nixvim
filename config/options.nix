@@ -18,6 +18,7 @@
         foldlevelstart = 99;
         hlsearch = true; # highlight all matches on previous search pattern
         ignorecase = true; # ignore case in search patterns
+        laststatus = 3;
         linebreak = true; # break wrapped lines at sensible characters
         mouse = ""; # enable or disable mouse
         number = true; # set numbered lines
