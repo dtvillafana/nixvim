@@ -8,7 +8,7 @@ let
             owner = "dtvillafana";
             repo = "tree-sitter-poweron";
             rev = "main";
-            hash = "sha256-ZHtcheIojmbTHmhJcZdSevcOk1Z6CQTqvwJ/bgoIwqI=";
+            hash = "sha256-/1UDCdqbv9vjBbnj+hSKhfcTm93N67cDV3wwpHEZKTY=";
         };
         meta.homepage = "https://github.com/dtvillafana/tree-sitter-poweron";
     };
