@@ -35,23 +35,25 @@
 
                 vim.api.nvim_create_autocmd("VimResized", {
                   callback = function()
+                    local status_ok, telescope = pcall(require, 'telescope')
+                    if status_ok then
+                        telescope.setup({
+                            defaults = {
+                                layout_strategy = GET_TELESCOPE_LAYOUT()
+                            }
+                        })
+                    end
+                  end
+                })
+
+                local status_ok, telescope = pcall(require, 'telescope')
+                if status_ok then
                     telescope.setup({
                         defaults = {
                             layout_strategy = GET_TELESCOPE_LAYOUT()
                         }
                     })
-                  end
-                })
-
-	        local status_ok, telescope = pcall(require, 'telescope')
-	        if not status_ok then
-	            return
-	        end
-                telescope.setup({
-                    defaults = {
-                        layout_strategy = GET_TELESCOPE_LAYOUT()
-                    }
-                })
+                end
             '';
         };
     };
