@@ -20,25 +20,36 @@
             };
             extensions.manix.enable = true;
             luaConfig.post = ''
-                function set_telescope_layout()
-                    local status_ok, telescope = pcall(require, 'telescope')
-                    if not status_ok then
-                        return 'horizontal'
-                    end
-                    local layout = ""
-                    if vim.o.lines > 100 then
-                        return 'vertical'
-                    else
-                        return 'horizontal'
-                    end
+                function GET_TELESCOPE_LAYOUT()
+                   local status_ok, telescope = pcall(require, 'telescope')
+                   if not status_ok then
+                       return 'horizontal'
+                   end
+                   local layout = ""
+                   if vim.o.lines > 100 then
+                       return 'vertical'
+                   else
+                       return 'horizontal'
+                   end
                 end
-                local status_ok, telescope = pcall(require, 'telescope')
-                if not status_ok then
-                    return
-                end
+
+                vim.api.nvim_create_autocmd("VimResized", {
+                  callback = function()
+                    telescope.setup({
+                        defaults = {
+                            layout_strategy = GET_TELESCOPE_LAYOUT()
+                        }
+                    })
+                  end
+                })
+
+	        local status_ok, telescope = pcall(require, 'telescope')
+	        if not status_ok then
+	            return
+	        end
                 telescope.setup({
                     defaults = {
-                        layout_strategy = set_telescope_layout()
+                        layout_strategy = GET_TELESCOPE_LAYOUT()
                     }
                 })
             '';

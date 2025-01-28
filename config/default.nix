@@ -34,5 +34,6 @@
         ./presenting.nix
         ./dadbod.nix
         ./render-markdown.nix
+        ./custom-lua.nix
     ];
 }
