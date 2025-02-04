@@ -7,7 +7,7 @@
     plugins = {
         notify = {
             enable = true;
-            fps = 60;
+            settings.fps = 60;
         };
         noice = {
             enable = true;

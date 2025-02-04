@@ -49,4 +49,8 @@
         list = true;
         listchars = "tab:>-,space:·";
     };
+    plugins.lz-n.enable = true;
+    diagnostics = {
+        virtual_text = false;
+    };
 }

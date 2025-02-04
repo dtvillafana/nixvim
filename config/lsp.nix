@@ -36,6 +36,7 @@
             servers = {
                 elixirls.enable = true;
                 jdtls.enable = true;
+                svelte.enable = true;
                 nixd = {
                     enable = true;
                     settings = {
@@ -146,6 +147,9 @@
                     jump = "gd";
                     toggleOrJump = "<CR>";
                 };
+            };
+            diagnostic = {
+                diagnosticOnlyCurrent = true;
             };
         };
     };
