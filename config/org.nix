@@ -126,8 +126,9 @@ if orgPath == null then {} else
                 owner = "chipsenkbeil";
                 repo = "org-roam.nvim";
                 rev = "master";
-                hash = "sha256-R+5vbvOMVlLfPx5xmmx2cG0p+FhO3gFBpVZFvVwJDfM=";
+                hash = "sha256-I6Cz1d+7RJ5BJS5DhCqpUpKJIGI9B5McTWxcu06R7ag=";
             };
+            doCheck = false;
         })
         (pkgs.vimUtils.buildVimPlugin {
             name = "telescope-orgmode";
@@ -137,6 +138,7 @@ if orgPath == null then {} else
                 rev = "master";
                 hash = "sha256-yeGdy1aip4TZKp++MuSo+kxo+XhFsOT0yv+9xJpKEps=";
             };
+            doCheck = false;
         })
     ];
     extraConfigLua = ''

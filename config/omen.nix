@@ -9,6 +9,7 @@ if omenPath == null then {} else {
                 rev = "master";
                 hash = "sha256-yQ+RiF1v7+XmF+Z7/9UGZeZej3rIML012gV+9r3nvOs=";
             };
+            doCheck = false;
         })
     ];
     extraConfigLua = ''
