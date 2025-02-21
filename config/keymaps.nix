@@ -43,7 +43,7 @@
         { mode = "v"; key = "<leader>y"; action = "\"+y"; options = { noremap = true; silent = true; }; }
 
         # global replace visual selection
-        { mode = "v"; key = "<leader>r"; action = "\"hy:%s/<C-r>h//g<left><left>"; options = { noremap = true; silent = true; }; }
+        { mode = "v"; key = "<leader>r"; action = "\"hy:%s/\\<<C-r>h\\>/<C-r>h/g<left><left>"; options = { noremap = true; silent = true; }; }
 
         # Stay in indent mode when indenting
         { mode = "v"; key = "<"; action = "<gv"; options = { noremap = true; silent = true; }; }
