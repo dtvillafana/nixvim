@@ -9,14 +9,35 @@
         vim.g.db_ui_use_nerd_fonts = 1
         vim.g.db_ui_show_database_icon = 1
         local dbs = {}
+        function urlencode(str)
+            if str then
+                -- Convert all characters except alphanumeric, '-', '_', '.', '~' to percent encoding
+                -- These are the "unreserved characters" in RFC 3986
+                str = string.gsub(str, "([^%w%-_%.~])", function(c)
+                    -- Convert to hex and format as %XX
+                    return string.format("%%%02X", string.byte(c))
+                end)
+            end
+            return str
+        end
         local env_vars = {
+            {
+                env_var = os.getenv('ARCU'),
+                key = 'ARCUSYM000',
+                value_func = function(var)
+                    -- to make sql server work you might have to URL encode special characters and/or add some parameters to the end of your connection string:
+                    return 'sqlserver://sa:'
+                        .. urlencode(var)
+                        .. '@172.20.102.77:1433/ARCUSYM000?Encrypt=1;trustServerCertificate=1'
+                end,
+            },
             {
                 env_var = os.getenv('sql3_pw'),
                 key = 'fics-test',
                 value_func = function(var)
                     -- to make sql server work you might have to URL encode special characters and/or add some parameters to the end of your connection string:
                     return 'sqlserver://fics:'
-                        .. var
+                        .. urlencode(var)
                         .. '@172.20.102.60:1433/fics_test?Encrypt=1;trustServerCertificate=1'
                 end,
             },
