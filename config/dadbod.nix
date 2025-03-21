@@ -22,26 +22,6 @@
         end
         local env_vars = {
             {
-                env_var = os.getenv('ARCU'),
-                key = 'ARCUSYM000',
-                value_func = function(var)
-                    -- to make sql server work you might have to URL encode special characters and/or add some parameters to the end of your connection string:
-                    return 'sqlserver://sa:'
-                        .. urlencode(var)
-                        .. '@172.20.102.77:1433/ARCUSYM000?Encrypt=1;trustServerCertificate=1'
-                end,
-            },
-            {
-                env_var = os.getenv('sql3_pw'),
-                key = 'fics-test',
-                value_func = function(var)
-                    -- to make sql server work you might have to URL encode special characters and/or add some parameters to the end of your connection string:
-                    return 'sqlserver://fics:'
-                        .. urlencode(var)
-                        .. '@172.20.102.60:1433/fics_test?Encrypt=1;trustServerCertificate=1'
-                end,
-            },
-            {
                 env_var = os.getenv('HOME'),
                 key = 'politics',
                 value_func = function(var)
