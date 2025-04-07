@@ -34,7 +34,15 @@
         end,
     })
     -- keymaps
-    vim.keymap.set("n", "<leader>ss", resession.save_tab)
+    local save_tab = function()
+        local current_buf = vim.api.nvim_get_current_buf()
+        local filepath = vim.api.nvim_buf_get_name(current_buf)
+        local directory = vim.fn.fnamemodify(filepath, ':h')
+        local command = 'cd ' .. directory
+        vim.api.nvim_exec2(command, { output = false })
+        resession.save_tab()
+    end
+    vim.keymap.set("n", "<leader>ss", save_tab)
     vim.keymap.set("n", "<leader>sl", resession.load)
     vim.keymap.set("n", "<leader>sd", resession.delete)
     '';
