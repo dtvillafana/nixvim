@@ -36,5 +36,6 @@
         ./render-markdown.nix
         ./custom-lua.nix
         ./csvview.nix
+        ./snacks.nix
     ];
 }
