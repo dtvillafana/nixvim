@@ -7,7 +7,7 @@
                 owner = "cameron-wags";
                 repo = "rainbow_csv.nvim";
                 rev = "main";
-                hash = "sha256-/XHQd/+sqhVeeMAkcKNvFDKFuFecChrgp56op3KQAhs=";
+                hash = "sha256-gj1SmcTBIW2fkgOzYkCeltZcsyHKniS8iEiPKhYJgmY=";
             };
         })
     ];
