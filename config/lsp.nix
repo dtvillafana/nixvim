@@ -1,15 +1,11 @@
 { system, pkgs, ... }:
 {
     plugins = {
-        direnv = {
-            enable = true;
-            direnvPackage = pkgs.nix-direnv;
-        };
         telescope.keymaps = {
-                "<leader>lf" = "lsp_references";
-                "<leader>lg" = "lsp_definitions";
-                "<leader>lci" = "lsp_incoming_calls";
-                "<leader>lco" = "lsp_outgoing_calls";
+            "<leader>lf" = "lsp_references";
+            "<leader>lg" = "lsp_definitions";
+            "<leader>lci" = "lsp_incoming_calls";
+            "<leader>lco" = "lsp_outgoing_calls";
         };
         lsp = {
             enable = true;
@@ -162,5 +158,5 @@
     };
     extraConfigLua = ''
         vim.g.type_checking = true;
-    '';
+        '';
 }
