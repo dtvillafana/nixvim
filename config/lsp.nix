@@ -7,6 +7,12 @@
             "<leader>lci" = "lsp_incoming_calls";
             "<leader>lco" = "lsp_outgoing_calls";
         };
+        direnv = {
+            enable = true;
+            settings = {
+                direnv_silent_reload = 0;
+            };
+        };
         lsp = {
             enable = true;
 

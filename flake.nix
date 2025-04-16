@@ -35,6 +35,7 @@
                                 ripgrep
                                 pandoc
                                 nix-direnv
+                                direnv
                                 xclip
                                 ansible-lint
                             ];
