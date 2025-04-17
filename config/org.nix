@@ -126,7 +126,7 @@ if orgPath == null then {} else
                 owner = "chipsenkbeil";
                 repo = "org-roam.nvim";
                 rev = "master";
-                hash = "sha256-KEmbFGXjOlSPY8wpr5WUzD5+eCUP1hXN2Ty37smLU9M=";
+                hash = "sha256-yLRlid1H3yJwNk9ZCSykuJCNSc5gIknHZ/PbqfWvkc8=";
             };
             doCheck = false;
         })
