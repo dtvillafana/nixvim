@@ -47,7 +47,7 @@
         guifont = "SauceCodePro Nerd Font Mono:h11"; # the font used in graphical neovim applications
         maxmempattern = 2000000;
         list = true;
-        listchars = "tab:>-,space:·,eol:⏎";
+        listchars = "tab:>-,space:·,eol:";
     };
     plugins.lz-n.enable = true;
     diagnostics = {
