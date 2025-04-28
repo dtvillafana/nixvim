@@ -36,6 +36,15 @@
                 ];
             };
             servers = {
+                ansiblels = {
+                    enable = true;
+                    filetypes = [
+                        "yaml.ansible"
+                    ];
+                    settings.ansible = {
+                        executionEnvironment.enabled = false;
+                    };
+                };
                 elixirls.enable = true;
                 jdtls.enable = true;
                 svelte.enable = true;
@@ -127,16 +136,12 @@
                     ];
                 };
                 ts_ls.enable = true;
-                clangd.enable = true;
-                ansiblels = {
+                rust_analyzer = {
                     enable = true;
-                    filetypes = [
-                        "yaml.ansible"
-                    ];
-                    settings.ansible = {
-                        executionEnvironment.enabled = false;
-                    };
+                    installCargo = true;
+                    installRustc = true;
                 };
+                clangd.enable = true;
 
             };
         };
