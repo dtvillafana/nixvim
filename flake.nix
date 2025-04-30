@@ -31,7 +31,6 @@
                                 gnupg
                                 diff-so-fancy
                                 btop
-                                nodejs-18_x
                                 ripgrep
                                 pandoc
                                 nix-direnv
@@ -44,8 +43,8 @@
                         extraSpecialArgs = {
                             system = system;
                             pkgs = pkgs;
-                            orgPath = null;
-                            omenPath = null;
+                            orgPath = "~/git-repos/orgfiles/";
+                            omenPath = "~/.local/share/gopass/stores/root/";
                             # inherit (inputs) foo;
                         };
                     };

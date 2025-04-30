@@ -1,4 +1,4 @@
-{ pkgs, lib, orgPath ? "~/git-repos/orgfiles/", ... }:
+{ pkgs, lib, orgPath, ... }:
 if orgPath == null then {} else 
     {
     plugins = {
@@ -8,6 +8,9 @@ if orgPath == null then {} else
                 org_agenda_files = "${orgPath}**/*";
                 org_default_notes_file = "${orgPath}refile.org";
                 org_hide_emphasis_markers = true;
+                org_priority_default = "B";
+                org_priority_lowest = "G";
+                org_priority_highest = "A";
                 org_todo_keywords = [
                     "TODO(t)"
                     "MEET(m)"

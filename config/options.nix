@@ -50,7 +50,7 @@
         listchars = "tab:>-,space:·,eol:";
     };
     plugins.lz-n.enable = true;
-    diagnostics = {
+    diagnostic.config = {
         virtual_text = false;
     };
 }
