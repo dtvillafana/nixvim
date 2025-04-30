@@ -3,7 +3,10 @@
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-        nixvim.url = "github:nix-community/nixvim";
+        nixvim = {
+            url = "github:nix-community/nixvim";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
         flake-parts.url = "github:hercules-ci/flake-parts";
     };
 
@@ -27,24 +30,25 @@
                             imports = [ ./config ]; # import the modules directly
                             extraPackages = with pkgs; [
                                 alejandra
-                                lazygit
-                                gnupg
-                                diff-so-fancy
-                                btop
-                                ripgrep
-                                pandoc
-                                nix-direnv
-                                direnv
-                                xclip
+                                ansible
                                 ansible-lint
+                                btop
+                                diff-so-fancy
+                                direnv
+                                gnupg
+                                lazygit
+                                nix-direnv
+                                pandoc
+                                ripgrep
+                                xclip
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files
                         extraSpecialArgs = {
                             system = system;
                             pkgs = pkgs;
-                            orgPath = "~/git-repos/orgfiles/";
-                            omenPath = "~/.local/share/gopass/stores/root/";
+                            orgPath = "/home/vir/git-repos/orgfiles/";
+                            omenPath = "/home/vir/.local/share/gopass/stores/root/";
                             # inherit (inputs) foo;
                         };
                     };
