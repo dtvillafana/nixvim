@@ -2,40 +2,41 @@
 {
     # Import all your configuration modules here
     imports = [
-        ./lsp.nix
-        ./completion.nix
-        ./keymaps.nix
+        ./autopairs.nix
         ./bufdelete.nix
-        ./telescope.nix
-        ./dressing.nix
-        ./lualine.nix
-        ./oil.nix
-        ./whichkey.nix
-        ./flash.nix
-        ./gitsigns.nix
-        ./todo-comments.nix
-        ./indent-blankline.nix
         ./bufferline.nix
         ./catppuccin.nix
-        ./autopairs.nix
-        ./treesitter.nix
-        ./toggleterm.nix
-        ./options.nix
+        ./comment.nix
+        ./completion.nix
+        ./csvview.nix
+        ./custom-lua.nix
+        ./dadbod.nix
+        ./dressing.nix
+        ./flash.nix
+        ./gitsigns.nix
+        ./indent-blankline.nix
+        ./keymaps.nix
+        ./lsp.nix
+        ./lualine.nix
         ./noice.nix
         ./nvimtree.nix
+        ./oil.nix
         ./omen.nix
-        ./comment.nix
+        ./options.nix
         ./org.nix
-        ./rainbow-delimiters.nix
+        ./presenting.nix
         ./rainbow-csv.nix
+        ./rainbow-delimiters.nix
+        ./render-markdown.nix
         ./scope.nix
         ./sessions.nix
-        ./surround.nix
-        ./presenting.nix
-        ./dadbod.nix
-        ./render-markdown.nix
-        ./custom-lua.nix
-        ./csvview.nix
         ./snacks.nix
+        ./surround.nix
+        ./telescope.nix
+        ./todo-comments.nix
+        ./toggleterm.nix
+        ./treesitter.nix
+        ./whichkey.nix
+        ./window-picker.nix
     ];
 }
