@@ -139,7 +139,7 @@ if orgPath == null then {} else
                 owner = "nvim-orgmode";
                 repo = "telescope-orgmode.nvim";
                 rev = "master";
-                hash = "sha256-yeGdy1aip4TZKp++MuSo+kxo+XhFsOT0yv+9xJpKEps=";
+                hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
             };
             doCheck = false;
         })
