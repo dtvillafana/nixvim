@@ -42,7 +42,15 @@
                         "yaml.ansible"
                     ];
                     settings.ansible = {
+                        ansible = {
+                            path = "ansible";
+                            useFullyQualifiedCollectionNames = true;
+                        };
                         executionEnvironment.enabled = false;
+                        python = {
+                            interpreterPath = "python"; # Will use the first python in PATH, which should be the one from direnv
+                            envKind = "auto";
+                        };
                     };
                 };
                 elixirls.enable = true;
