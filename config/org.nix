@@ -1,6 +1,9 @@
 { pkgs, lib, orgPath, ... }:
 if orgPath == null then {} else 
     {
+    extraPackages = with pkgs; [
+        texliveSmall
+    ];
     plugins = {
         orgmode = {
             enable = true;
