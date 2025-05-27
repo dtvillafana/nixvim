@@ -14,12 +14,17 @@
     extraConfigLua = ''
         require('window-picker').setup()
         function open_path_in_win()
-            local path = vim.fn.expand('<cfile>')
+            local path = vim.fn.expand(vim.fn.expand('<cfile>'))
+            local file_dir = vim.fn.expand('%:p:h')
             
-            if vim.fn.filereadable(path) == 1 then
+            if vim.fn.filereadable(path) == 1 or vim.fn.filereadable(file_dir .. path) == 1 then
                 -- Check if a buffer for this file already exists
                 local existing_buf = vim.fn.bufnr(path)
                 local buf
+
+                if existing_buf == -1 then
+                    existing_buf = vim.fn.bufnr(file_dir .. path)
+                end
                 
                 if existing_buf ~= -1 then
                     -- Buffer already exists, use it
