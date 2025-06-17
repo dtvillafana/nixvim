@@ -12,6 +12,9 @@
         })
     ];
     extraConfigLua = ''
+    vim.g.disable_rainbow_statusline = 0
+    vim.g.disable_rainbow_hover = 0
+    vim.g.rainbow_hover_debounce_ms = 300
     require('rainbow_csv').setup({})
     '';
 }
