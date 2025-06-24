@@ -177,5 +177,36 @@
     };
     extraConfigLua = ''
         vim.g.type_checking = true;
+        function RESET_LSP()
+            local cur_buf = vim.api.nvim_get_current_buf()
+            local clients = vim.lsp.get_clients({bufnr = cur_buf})
+
+            -- Collect client names before stopping them
+            local client_names = {}
+            for _, client in ipairs(clients) do
+                table.insert(client_names, client.name)
+                vim.lsp.stop_client(client.id)
+            end
+
+            local filepath = vim.api.nvim_buf_get_name(cur_buf)
+            local directory = vim.fn.fnamemodify(filepath, ':h')
+            local command = 'cd ' .. directory
+            vim.api.nvim_exec2(command, { output = false })
+            vim.api.nvim_exec2('DirenvExport', { output = false })
+
+            -- Wait 500ms then reattach LSP
+            vim.defer_fn(function()
+                -- Force LSP to reattach by editing the buffer
+                vim.cmd('edit!')
+
+                -- Notify user which LSP servers were restarted
+                if #client_names > 0 then
+                    local message = "Restarted LSP servers: " .. table.concat(client_names, ", ")
+                    vim.notify(message, vim.log.levels.INFO)
+                else
+                    vim.notify("No LSP servers were running", vim.log.levels.WARN)
+                end
+            end, 1000)
+        end
         '';
 }
