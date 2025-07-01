@@ -8,6 +8,8 @@ if orgPath == null then {} else
         orgmode = {
             enable = true;
             settings = {
+                # Limit scope to specific directories or files for better performance
+                # Consider changing this to only include frequently used directories
                 org_agenda_files = "${orgPath}**/*";
                 org_default_notes_file = "${orgPath}refile.org";
                 org_hide_emphasis_markers = true;
@@ -92,30 +94,47 @@ if orgPath == null then {} else
                     ];
                     deadline_reminder = true;
                     scheduled_reminder = true;
+                    # Improved async notifier that won't block UI
                     notifier = ''
                         function(tasks)
-                            local result = {}
-                            for _, task in ipairs(tasks) do
-                                require('orgmode.utils').concat(result, {
-                                    string.format('# %s (%s)', task.category, task.humanized_duration),
-                                    string.format('%s %s %s', string.rep('*', task.level), task.todo, task.title),
-                                    string.format('%s: <%s>', task.type, task.time:to_string()),
-                                })
+                            -- Process small batches of tasks to avoid UI freezes
+                            local function process_tasks_batch(all_tasks, start_idx, batch_size)
+                                local result = {}
+                                local end_idx = math.min(start_idx + batch_size - 1, #all_tasks)
+
+                                for i = start_idx, end_idx do
+                                    local task = all_tasks[i]
+                                    require('orgmode.utils').concat(result, {
+                                        string.format('# %s (%s)', task.category, task.humanized_duration),
+                                        string.format('%s %s %s', string.rep('*', task.level), task.todo, task.title),
+                                        string.format('%s: <%s>', task.type, task.time:to_string()),
+                                    })
+                                end
+
+                                local msg = table.concat(result, '\n')
+                                if msg ~= "" then
+                                    require('noice').notify(msg, 'info', {
+                                        title = 'OrgNotify ' .. start_idx .. '-' .. end_idx,
+                                        on_open = function(win)
+                                            local buf_id = vim.api.nvim_win_get_buf(win)
+                                            vim.api.nvim_set_option_value('filetype', 'org', { buf = buf_id })
+                                        end,
+                                    })
+                                end
+
+                                -- Schedule next batch if there are more tasks
+                                if end_idx < #all_tasks then
+                                    vim.defer_fn(function()
+                                        process_tasks_batch(all_tasks, end_idx + 1, batch_size)
+                                    end, 10) -- 10ms delay between batches
+                                end
                             end
 
-                            local msg = ""
-                            for _, val in ipairs(result) do
-                                msg = msg .. val .. '\n'
-                            end
-
-                            if msg ~= "" then
-                                require('noice').notify(tostring(msg), 'info', {
-                                    title = 'OrgNotify',
-                                    on_open = function(win)
-                                        local buf_id = vim.api.nvim_win_get_buf(win)
-                                        vim.api.nvim_set_option_value('filetype', 'org', { buf = buf_id })
-                                    end,
-                                })
+                            -- Start processing in batches
+                            if #tasks > 0 then
+                                vim.defer_fn(function()
+                                    process_tasks_batch(tasks, 1, 5) -- Process 5 tasks at a time
+                                end, 0)
                             end
                         end,
                     '';
@@ -148,24 +167,73 @@ if orgPath == null then {} else
         })
     ];
     extraConfigLua = ''
-        require('org-roam').setup({
+        -- Add a more efficient setup for org-roam
+            vim.defer_fn(function()
+            require('org-roam').setup({
             directory = '${orgPath}roam',
-        })
+            })
+        end, 100) -- Delay loading slightly
 
+        -- Lazy-load telescope extension
+        vim.defer_fn(function()
+            local status_ok, telescope = pcall(require, 'telescope')
+            if not status_ok then
+                return
+            end
+            telescope.load_extension('orgmode')
+            vim.keymap.set('n', '<leader>oh', telescope.extensions.orgmode.search_headings)
+            vim.keymap.set('n', '<leader>ol', telescope.extensions.orgmode.insert_link)
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = 'org',
+                group = vim.api.nvim_create_augroup('orgmode_telescope_nvim', { clear = true }),
+                callback = function()
+                    vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
+                end,
+            })
+        end, 200) -- Load after org-roam
 
-        local status_ok, telescope = pcall(require, 'telescope')
-        if not status_ok then
-            return
-        end
-        telescope.load_extension('orgmode')
-        vim.keymap.set('n', '<leader>oh', telescope.extensions.orgmode.search_headings)
-        vim.keymap.set('n', '<leader>ol', telescope.extensions.orgmode.insert_link)
-        vim.api.nvim_create_autocmd('FileType', {
-            pattern = 'org',
-            group = vim.api.nvim_create_augroup('orgmode_telescope_nvim', { clear = true }),
-            callback = function()
-                vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
-            end,
-        })
+        -- Add a global command to disable/enable org notifications temporarily
+        vim.api.nvim_create_user_command('OrgNotifyToggle', function()
+            if vim.g.org_notify_disabled then
+                vim.g.org_notify_disabled = nil
+                vim.notify('Org notifications enabled')
+                -- Re-enable the notifications
+                require('orgmode').setup({
+                    notifications = {
+                        enabled = true,
+                        cron_enabled = false
+                    }
+                })
+            else
+                vim.g.org_notify_disabled = true
+                vim.notify('Org notifications disabled')
+                require('orgmode').setup({
+                    notifications = {
+                        enabled = false,
+                        cron_enabled = false
+                    }
+                })
+                -- You could add code here to stop any existing notification timers
+            end
+        end, {})
+
+        -- Add a function to limit org agenda scope temporarily
+        vim.api.nvim_create_user_command('OrgLimitAgendaScope', function(opts)
+            local path = opts.args
+            if path and path ~= "" then
+                -- Store the original path
+                if not vim.g.original_agenda_files then
+                    vim.g.original_agenda_files = require('orgmode.config').org_agenda_files
+                end
+                require('orgmode.config').org_agenda_files = path
+                vim.notify('Org agenda scope limited to: ' .. path)
+            else
+                -- Restore original path if exists
+                if vim.g.original_agenda_files then
+                    require('orgmode.config').org_agenda_files = vim.g.original_agenda_files
+                    vim.notify('Org agenda scope restored to original')
+                end
+            end
+        end, {nargs = '?'})
             '';
 }
