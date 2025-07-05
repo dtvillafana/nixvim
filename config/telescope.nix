@@ -17,19 +17,33 @@
                 "<leader>fc" = "command_history";
                 "<leader>/" = "current_buffer_fuzzy_find";
             };
+            settings = {
+                defaults = {
+                    vimgrep_arguments = [
+                        "rg"
+                        "--color=never"
+                        "--no-heading"
+                        "--with-filename"
+                        "--line-number"
+                        "--column"
+                        "--smart-case"
+                        "--hidden"
+                    ];
+                };
+            };
             extensions.manix.enable = true;
             luaConfig.post = ''
                 function GET_TELESCOPE_LAYOUT()
-                   local status_ok, telescope = pcall(require, 'telescope')
-                   if not status_ok then
-                       return 'horizontal'
-                   end
-                   local layout = ""
-                   if vim.o.lines > 100 then
-                       return 'vertical'
-                   else
-                       return 'horizontal'
-                   end
+                    local status_ok, telescope = pcall(require, 'telescope')
+                    if not status_ok then
+                        return 'horizontal'
+                    end
+                    local layout = ""
+                    if vim.o.lines > 100 then
+                        return 'vertical'
+                    else
+                        return 'horizontal'
+                    end
                 end
 
                 vim.api.nvim_create_autocmd("VimResized", {
