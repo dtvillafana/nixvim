@@ -2,7 +2,7 @@
 if orgPath == null then {} else 
     {
     extraPackages = with pkgs; [
-        texliveSmall
+        texliveMedium
     ];
     plugins = {
         orgmode = {
