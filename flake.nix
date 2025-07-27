@@ -29,7 +29,6 @@
                         module = {
                             imports = [ ./config ]; # import the modules directly
                             extraPackages = with pkgs; [
-                                alejandra
                                 ansible
                                 ansible-lint
                                 btop

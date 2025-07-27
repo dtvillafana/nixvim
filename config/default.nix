@@ -13,6 +13,7 @@
         ./dadbod.nix
         ./dressing.nix
         ./flash.nix
+        ./formatters.nix
         ./gitsigns.nix
         ./indent-blankline.nix
         ./keymaps.nix
