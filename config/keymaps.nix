@@ -16,7 +16,7 @@
         # exiting controls
         { mode = "n"; key = "<leader>q"; action = "<CMD>q<CR>"; options = { noremap = true; silent = true; }; }
         { mode = "n"; key = "<A-q>"; action = "<CMD>tabclose<CR>"; options = { noremap = true; silent = true; }; }
-        { mode = "n"; key = "<leader>w"; action = "<CMD>w!<CR>"; options = { noremap = true; silent = true; }; }
+        { mode = "n"; key = "<leader>w"; action = "<CMD>update<CR>"; options = { noremap = true; silent = true; }; }
         { mode = "n"; key = "<leader>x"; action = "<CMD>x<CR>"; options = { noremap = true; silent = true; }; }
 
         # resizing with arrow actions
