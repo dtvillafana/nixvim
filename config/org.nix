@@ -151,7 +151,7 @@ if orgPath == null then {} else
                 owner = "chipsenkbeil";
                 repo = "org-roam.nvim";
                 rev = "master";
-                hash = "sha256-TOhVdfiwXuRqCqlz3ZMVQuHGIoJYBtHQwp7GnwlmOzA=";
+                hash = "sha256-qSqP58gI0NTbYgnPTsK7odEBmzTXXT4lTsq82l/Z0sI=";
             };
             doCheck = false;
         })
@@ -161,7 +161,7 @@ if orgPath == null then {} else
                 owner = "nvim-orgmode";
                 repo = "telescope-orgmode.nvim";
                 rev = "master";
-                hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
+                hash = "sha256-6gZR1hJ8dqpnV/DFNn2htG3cPIu/USug4uQU/JS4RpI=";
             };
             doCheck = false;
         })
