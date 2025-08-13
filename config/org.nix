@@ -2,7 +2,13 @@
 if orgPath == null then {} else 
     {
     extraPackages = with pkgs; [
-        texliveMedium
+        (texlive.withPackages(p: with p;[
+            hyphenat
+            latex
+            latex-bin
+            latexmk
+            scheme-medium
+        ]))
     ];
     plugins = {
         orgmode = {
