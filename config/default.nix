@@ -1,44 +1,44 @@
-{orgPath, omenPath, ...}:
+{ orgPath, omenPath, ... }:
 {
-    # Import all your configuration modules here
-    imports = [
-        ./autopairs.nix
-        ./bufdelete.nix
-        ./bufferline.nix
-        ./catppuccin.nix
-        ./comment.nix
-        ./completion.nix
-        ./csvview.nix
-        ./custom-lua.nix
-        ./dadbod.nix
-        ./dressing.nix
-        ./flash.nix
-        ./formatters.nix
-        ./gitsigns.nix
-        ./indent-blankline.nix
-        ./keymaps.nix
-        ./lsp.nix
-        ./lualine.nix
-        ./noice.nix
-        ./nvimtree.nix
-        ./oil.nix
-        ./omen.nix
-        ./options.nix
-        ./org.nix
-        ./presenting.nix
-        ./rainbow-csv.nix
-        ./rainbow-delimiters.nix
-        ./render-markdown.nix
-        ./scope.nix
-        ./sessions.nix
-        ./snacks.nix
-        ./surround.nix
-        ./telescope.nix
-        ./todo-comments.nix
-        ./toggleterm.nix
-        ./treesitter.nix
-        ./whichkey.nix
-        ./window-picker.nix
-        ./image.nix
-    ];
+  # Import all your configuration modules here
+  imports = [
+    ./autopairs.nix
+    ./bufdelete.nix
+    ./bufferline.nix
+    ./catppuccin.nix
+    ./comment.nix
+    ./completion.nix
+    ./csvview.nix
+    ./custom-lua.nix
+    ./dadbod.nix
+    ./dressing.nix
+    ./flash.nix
+    ./formatters.nix
+    ./gitsigns.nix
+    ./indent-blankline.nix
+    ./keymaps.nix
+    ./lsp.nix
+    ./lualine.nix
+    ./noice.nix
+    ./nvimtree.nix
+    ./oil.nix
+    ./omen.nix
+    ./options.nix
+    ./org.nix
+    ./presenting.nix
+    ./rainbow-csv.nix
+    ./rainbow-delimiters.nix
+    ./render-markdown.nix
+    ./scope.nix
+    ./sessions.nix
+    ./snacks.nix
+    ./surround.nix
+    ./telescope.nix
+    ./todo-comments.nix
+    ./toggleterm.nix
+    ./treesitter.nix
+    ./whichkey.nix
+    ./window-picker.nix
+    ./image.nix
+  ];
 }

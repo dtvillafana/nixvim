@@ -1,17 +1,17 @@
 { pkgs, ... }:
 {
-    extraPlugins = [
-        (pkgs.vimUtils.buildVimPlugin {
-            name = "resession";
-            src = pkgs.fetchFromGitHub {
-                owner = "stevearc";
-                repo = "resession.nvim";
-                rev = "master";
-                hash = "sha256-S5mN/1yzUjV76YTYB41aaTL1xuGEfTN2LpEsc28RhDM=";
-            };
-        })
-    ];
-    extraConfigLua = ''
+  extraPlugins = [
+    (pkgs.vimUtils.buildVimPlugin {
+      name = "resession";
+      src = pkgs.fetchFromGitHub {
+        owner = "stevearc";
+        repo = "resession.nvim";
+        rev = "master";
+        hash = "sha256-S5mN/1yzUjV76YTYB41aaTL1xuGEfTN2LpEsc28RhDM=";
+      };
+    })
+  ];
+  extraConfigLua = ''
     local resession = require("resession")
     resession.setup({
         autosave = {
@@ -45,5 +45,5 @@
     vim.keymap.set("n", "<leader>ss", save_tab)
     vim.keymap.set("n", "<leader>sl", resession.load)
     vim.keymap.set("n", "<leader>sd", resession.delete)
-    '';
+  '';
 }
