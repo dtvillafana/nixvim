@@ -40,6 +40,8 @@
                                 pandoc
                                 ripgrep
                                 xclip
+                                imagemagick
+                                ueberzugpp
                             ];
                         };
                         # You can use `extraSpecialArgs` to pass additional arguments to your module files

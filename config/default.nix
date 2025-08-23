@@ -39,5 +39,6 @@
         ./treesitter.nix
         ./whichkey.nix
         ./window-picker.nix
+        ./image.nix
     ];
 }
