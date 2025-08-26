@@ -160,16 +160,16 @@ else
     };
 
     extraPlugins = [
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "org-roam";
-        src = pkgs.fetchFromGitHub {
-          owner = "chipsenkbeil";
-          repo = "org-roam.nvim";
-          rev = "master";
-          hash = "sha256-k/odVuPx6YdX8Cc+DZmVgo3M+NTpKQbFgSMtDe+UwUE=";
-        };
-        doCheck = false;
-      })
+      # (pkgs.vimUtils.buildVimPlugin {
+      #   name = "org-roam";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "chipsenkbeil";
+      #     repo = "org-roam.nvim";
+      #     rev = "master";
+      #     hash = "sha256-k/odVuPx6YdX8Cc+DZmVgo3M+NTpKQbFgSMtDe+UwUE=";
+      #   };
+      #   doCheck = false;
+      # })
       (pkgs.vimUtils.buildVimPlugin {
         name = "telescope-orgmode";
         src = pkgs.fetchFromGitHub {
@@ -183,11 +183,11 @@ else
     ];
     extraConfigLua = ''
       -- Add a more efficient setup for org-roam
-          vim.defer_fn(function()
-          require('org-roam').setup({
-          directory = '${orgPath}roam',
-          })
-      end, 100) -- Delay loading slightly
+      --    vim.defer_fn(function()
+      --    require('org-roam').setup({
+      --    directory = '${orgPath}roam',
+      --    })
+      -- end, 100) -- Delay loading slightly
 
       -- Lazy-load telescope extension
       vim.defer_fn(function()
