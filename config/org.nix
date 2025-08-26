@@ -166,7 +166,7 @@ else
           owner = "chipsenkbeil";
           repo = "org-roam.nvim";
           rev = "master";
-          hash = "sha256-ql9Od8o7Cu++8PczOvQF51Mo5I1XwGMHAGAxtU6H+8U=";
+          hash = "sha256-k/odVuPx6YdX8Cc+DZmVgo3M+NTpKQbFgSMtDe+UwUE=";
         };
         doCheck = false;
       })
