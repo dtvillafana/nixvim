@@ -19,4 +19,16 @@
         configure_slide_buffer = function(buf) vim.api.nvim_buf_set_option(buf, 'filetype', 'org'); vim.api.nvim_buf_set_option(buf, 'foldlevel', 99) end,
     })
   '';
+
+  keymaps = [
+    {
+      mode = "n";
+      key = "<leader>pr";
+      action = "<CMD>lua require('presenting').toggle()<CR>";
+      options = {
+        noremap = true;
+        silent = true;
+      };
+    }
+  ];
 }
