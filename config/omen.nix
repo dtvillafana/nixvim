@@ -10,7 +10,7 @@ else
           owner = "dtvillafana";
           repo = "omen.nvim";
           rev = "master";
-          hash = "sha256-yQ+RiF1v7+XmF+Z7/9UGZeZej3rIML012gV+9r3nvOs=";
+          hash = "sha256-tpeG4enllv4gCsdz0x+VJwO4B08FAiiK9r6xDt2cylo=";
         };
         doCheck = false;
       })
