@@ -32,6 +32,7 @@
     ./scope.nix
     ./sessions.nix
     ./snacks.nix
+    ./neovide.nix
     ./surround.nix
     ./telescope.nix
     ./todo-comments.nix
