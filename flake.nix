@@ -34,18 +34,19 @@
                 btop
                 diff-so-fancy
                 direnv
+                emacs
+                ghostscript_headless
                 gnupg
+                imagemagick
                 lazygit
                 nix-direnv
-                pandoc
                 ripgrep
                 xclip
-                imagemagick
-                ueberzugpp
               ];
             };
             # You can use `extraSpecialArgs` to pass additional arguments to your module files
             extraSpecialArgs = {
+              nixvimLib = nixvimLib;
               system = system;
               pkgs = pkgs;
               orgPath = "/home/vir/git-repos/orgfiles/";

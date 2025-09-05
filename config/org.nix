@@ -11,11 +11,17 @@ else
     extraPackages = with pkgs; [
       (texlive.withPackages (
         p: with p; [
+          beamer
           hyphenat
           latex
           latex-bin
           latexmk
+          pandoc
+          preview
           scheme-medium
+          standalone
+          varwidth
+          wrapfig
         ]
       ))
     ];
@@ -50,7 +56,7 @@ else
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
                     local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
+                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
@@ -58,6 +64,25 @@ else
                     local on_error = function(err)
                         print('Error!')
                         vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
+                    end
+                    return exporter(command, target, on_success, on_error)
+                end
+              '';
+            };
+            b = {
+              label = "Export to beamer";
+              action = lib.generators.mkLuaInline ''
+                function(exporter)
+                    local current_file = vim.api.nvim_buf_get_name(0)
+                    local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
+                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc -t beamer' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
+                    local on_success = function(output)
+                        print('Success! exported to ' .. target)
+                        vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
+                    end
+                    local on_error = function(err)
+                        print('Error!')
+                        vim.api.nvim_echo({ { table.concat(err, ""), 'ErrorMsg' } }, true, {})
                     end
                     return exporter(command, target, on_success, on_error)
                 end
