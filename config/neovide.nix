@@ -1,4 +1,14 @@
 {
+  globals = {
+    neovide_cursor_vfx_mode = "railgun";
+    neovide_cursor_vfx_particle_density = 20.0;
+    neovide_cursor_vfx_particle_speed = 10.0;
+    neovide_cursor_vfx_particle_lifetime = 1;
+    neovide_cursor_vfx_opacity = 1000.0;
+    neovide_cursor_vfx_particle_phase = 0.5;
+    neovide_cursor_vfx_particle_curl = 0.0;
+    neovide_scroll_animation_length = 0.1;
+  };
   keymaps = [
     # set leader key
     {
