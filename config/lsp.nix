@@ -1,4 +1,7 @@
-{ system, pkgs, ... }:
+{
+  system,
+  ...
+}:
 {
   plugins = {
     telescope.keymaps = {
@@ -191,16 +194,18 @@
     };
     lspsaga = {
       enable = true;
-      outline = {
-        closeAfterJump = true;
-        layout = "float";
-        keys = {
-          jump = "gd";
-          toggleOrJump = "<CR>";
+      settings = {
+        outline = {
+          closeAfterJump = true;
+          layout = "float";
+          keys = {
+            jump = "gd";
+            toggleOrJump = "<CR>";
+          };
         };
-      };
-      diagnostic = {
-        diagnosticOnlyCurrent = true;
+        diagnostic = {
+          diagnosticOnlyCurrent = true;
+        };
       };
     };
   };
