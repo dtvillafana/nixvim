@@ -1,10 +1,16 @@
-{ pkgs, ... }:
+{ ... }:
 {
-  extraPlugins = with pkgs.vimPlugins; [
-    vim-dadbod
-    vim-dadbod-ui
-    vim-dadbod-completion
-  ];
+  plugins = {
+    vim-dadbod = {
+      enable = true;
+    };
+    vim-dadbod-ui = {
+      enable = true;
+    };
+    vim-dadbod-completion = {
+      enable = true;
+    };
+  };
   extraConfigLua = ''
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_show_database_icon = 1

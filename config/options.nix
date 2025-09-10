@@ -25,12 +25,13 @@
     numberwidth = 4; # set number column width to 2 {default 4}
     pumheight = 10; # pop up menu height
     relativenumber = true; # set relative numbered lines
-    scrolloff = 4; # set how many lines the cursor can be from the edge of the screen before scrolling
     sessionoptions = "buffers,curdir,folds,winpos,winsize,tabpages,globals";
     shiftwidth = 4; # the number of spaces inserted for each indentation
     showmode = false; # we don"t need to see things like -- INSERT -- anymore
     showtabline = 2; # always show tabs
+    scrolloff = 4; # set how many lines the cursor can be from the edge of the screen before scrolling
     sidescrolloff = 4;
+    scrollopt = "ver,hor,jump";
     signcolumn = "yes"; # always show the sign column, otherwise it would shift the text each time
     smartcase = true; # smart case
     smartindent = true; # make indenting smarter again
