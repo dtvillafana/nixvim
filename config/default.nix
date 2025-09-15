@@ -19,6 +19,7 @@
     ./keymaps.nix
     ./lsp.nix
     ./lualine.nix
+    ./neovide.nix
     ./noice.nix
     ./nvimtree.nix
     ./oil.nix
@@ -32,7 +33,6 @@
     ./scope.nix
     ./sessions.nix
     ./snacks.nix
-    ./neovide.nix
     ./surround.nix
     ./telescope.nix
     ./todo-comments.nix
