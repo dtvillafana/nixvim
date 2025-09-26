@@ -93,7 +93,7 @@
     # resizing with arrow actions
     {
       mode = "n";
-      key = "<C-Up>";
+      key = "<C-K>";
       action = "<CMD>resize -2<CR>";
       options = {
         noremap = true;
@@ -102,7 +102,7 @@
     }
     {
       mode = "n";
-      key = "<C-Down>";
+      key = "<C-J>";
       action = "<CMD>resize +2<CR>";
       options = {
         noremap = true;
@@ -111,7 +111,7 @@
     }
     {
       mode = "n";
-      key = "<C-Left>";
+      key = "<C-H>";
       action = "<CMD>vertical resize -2<CR>";
       options = {
         noremap = true;
@@ -120,7 +120,7 @@
     }
     {
       mode = "n";
-      key = "<C-Right>";
+      key = "<C-L>";
       action = "<CMD>vertical resize +2<CR>";
       options = {
         noremap = true;
