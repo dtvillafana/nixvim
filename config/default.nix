@@ -1,4 +1,3 @@
-{ orgPath, omenPath, ... }:
 {
   # Import all your configuration modules here
   imports = [
@@ -11,6 +10,7 @@
     ./csvview.nix
     ./custom-lua.nix
     ./dadbod.nix
+    ./dial.nix
     ./dressing.nix
     ./flash.nix
     ./formatters.nix
