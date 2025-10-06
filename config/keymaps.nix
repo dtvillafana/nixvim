@@ -94,15 +94,6 @@
     {
       mode = "n";
       key = "<M-K>";
-      action = "<CMD>resize -2<CR>";
-      options = {
-        noremap = true;
-        silent = true;
-      };
-    }
-    {
-      mode = "n";
-      key = "<M-J>";
       action = "<CMD>resize +2<CR>";
       options = {
         noremap = true;
@@ -111,8 +102,17 @@
     }
     {
       mode = "n";
+      key = "<M-J>";
+      action = "<CMD>resize -2<CR>";
+      options = {
+        noremap = true;
+        silent = true;
+      };
+    }
+    {
+      mode = "n";
       key = "<M-H>";
-      action = "<CMD>vertical resize -2<CR>";
+      action = "<CMD>vertical resize +2<CR>";
       options = {
         noremap = true;
         silent = true;
@@ -121,7 +121,7 @@
     {
       mode = "n";
       key = "<M-L>";
-      action = "<CMD>vertical resize +2<CR>";
+      action = "<CMD>vertical resize -2<CR>";
       options = {
         noremap = true;
         silent = true;
