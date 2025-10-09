@@ -98,7 +98,7 @@
         nixd = {
           enable = true;
           settings = {
-            formatting.command = [ "alejandra" ];
+            formatting.command = [ "nixfmt" ];
             options.nixvim.expr = ''(builtins.getFlake ../. ).packages.${system}.neovimNixvim.options'';
           };
         };
