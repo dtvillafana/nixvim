@@ -48,7 +48,6 @@
             };
             # You can use `extraSpecialArgs` to pass additional arguments to your module files
             extraSpecialArgs = {
-              nixvimLib = nixvimLib;
               system = system;
               pkgs = pkgs;
               orgPath = "/home/vir/git-repos/orgfiles/";

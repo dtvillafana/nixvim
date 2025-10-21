@@ -10,9 +10,8 @@
       callback = {
         __raw = ''
           function()
-              vim.bo.formatexpr = ""
-              vim.bo.formatprg = "${pkgs.nixfmt-rfc-style}/bin/nixfmt"
-              vim.bo.equalprg = "nixfmt"
+              vim.bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+              vim.bo.equalprg =  "${pkgs.nixfmt-rfc-style}/bin/nixfmt"
           end
         '';
       };
