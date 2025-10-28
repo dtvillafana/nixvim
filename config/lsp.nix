@@ -1,7 +1,47 @@
 {
   lib,
+  pkgs,
   ...
 }:
+let
+
+  ansible-ls = pkgs.buildNpmPackage rec {
+    pname = "ansible-language-server";
+    version = "1.2.1";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "ansible";
+      repo = "ansible-language-server";
+      tag = "v${version}";
+      hash = "sha256-e6cOWoryOxWnl8q62rlGmSgwLVnoxLMwNFoGlUZw2bQ=";
+    };
+
+    npmDepsHash = "sha256-Lzwj0/2fxa44DJBsgDPa43AbRxggqh881X/DFnlNLig=";
+    npmBuildScript = "compile";
+
+    # We remove/ignore the prepare and prepack scripts because they run the
+    # build script, and therefore are redundant.
+    #
+    # Additionally, the prepack script runs npm ci in addition to the
+    # build script. Directly before npm pack is run, we make npm unaware
+    # of the dependency cache, causing the npm ci invocation to fail,
+    # wiping out node_modules, which causes a mysterious error stating that tsc isn't installed.
+    postPatch = ''
+      sed -i '/"prepare"/d' package.json
+      sed -i '/"prepack"/d' package.json
+    '';
+
+    npmPackFlags = [ "--ignore-scripts" ];
+
+    meta = with lib; {
+      changelog = "https://github.com/ansible/ansible-language-server/releases/tag/v${version}";
+      description = "Ansible Language Server";
+      mainProgram = "ansible-language-server";
+      homepage = "https://github.com/ansible/ansible-language-server";
+      license = licenses.mit;
+    };
+  };
+in
 {
   extraConfigLuaPost = ''
     local severity = vim.diagnostic.severity
@@ -106,6 +146,14 @@
       };
       lua_ls = {
         enable = true;
+        settings = {
+          telemetry.enable = false;
+          diagnostics = {
+            globals = [
+              "vim"
+            ];
+          };
+        };
       };
     };
     luaConfig = {
@@ -152,28 +200,43 @@
                 end
             end, 1000)
         end
+
+        -- Manual Ansible Language Server setup
+        local lspconfig = require('lspconfig')
+
+        -- Define the ansible language server manually
+        local configs = require('lspconfig.configs')
+        if not configs.ansiblels then
+          configs.ansiblels = {
+            default_config = {
+              cmd = { '${ansible-ls}/bin/ansible-language-server', '--stdio' },
+              filetypes = { 'yaml.ansible' },
+              root_dir = lspconfig.util.root_pattern('.git', 'ansible.cfg', 'inventory'),
+              settings = {
+                ansible = {
+                  path = "ansible",
+                  useFullyQualifiedCollectionNames = true,
+                },
+                executionEnvironment = {
+                  enabled = false,
+                },
+                python = {
+                  interpreterPath = "python",
+                  envKind = "auto",
+                },
+              },
+            },
+          }
+        end
+
+        -- Setup the server
+        lspconfig.ansiblels.setup({})
       '';
     };
   };
+
   plugins.lsp = {
     servers = {
-      ansiblels = {
-        enable = true;
-        filetypes = [
-          "yaml.ansible"
-        ];
-        settings.ansible = {
-          ansible = {
-            path = "ansible";
-            useFullyQualifiedCollectionNames = true;
-          };
-          executionEnvironment.enabled = false;
-          python = {
-            interpreterPath = "python"; # Will use the first python in PATH, which should be the one from direnv
-            envKind = "auto";
-          };
-        };
-      };
       lua_ls = {
         enable = true;
         settings = {
