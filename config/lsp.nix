@@ -57,7 +57,7 @@ in
     })
   '';
   lsp = {
-    inlayHints.enable = true;
+    inlayHints.enable = false;
     keymaps = [
       # General LSP Actions
       {
