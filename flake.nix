@@ -43,6 +43,7 @@
                 nix-direnv
                 nixfmt-rfc-style
                 ripgrep
+                tectonic
                 xclip
               ];
             };

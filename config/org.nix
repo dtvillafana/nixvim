@@ -56,7 +56,7 @@ else
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
                     local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
+                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --pdf-engine=tectonic --standalone' .. ' --variable mainfont="DejaVu Sans Mono"'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
