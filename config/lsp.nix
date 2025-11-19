@@ -323,6 +323,7 @@ in
     telescope.keymaps = {
       "<leader>lf" = "lsp_references";
       "<leader>lg" = "lsp_definitions";
+      "<leader>lt" = "lsp_type_definitions";
       "<leader>lci" = "lsp_incoming_calls";
       "<leader>lco" = "lsp_outgoing_calls";
     };
