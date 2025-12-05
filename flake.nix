@@ -43,7 +43,6 @@
                 nix-direnv
                 nixfmt-rfc-style
                 ripgrep
-                tectonic
                 xclip
               ];
             };
@@ -53,7 +52,6 @@
               pkgs = pkgs;
               orgPath = "/home/vir/git-repos/orgfiles/";
               omenPath = "/home/vir/.local/share/gopass/stores/root/";
-              # inherit (inputs) foo;
             };
           };
           nvim = nixvim'.makeNixvimWithModule nixvimModule;

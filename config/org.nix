@@ -7,8 +7,15 @@
 if orgPath == null then
   { }
 else
+  let
+    fontDir = pkgs.runCommand "pandoc-fonts" { } ''
+      mkdir -p $out/fonts
+      ln -s ${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM/*.ttf $out/fonts/
+    '';
+  in
   {
     extraPackages = with pkgs; [
+      tectonic
       (texlive.withPackages (
         p: with p; [
           beamer
@@ -56,7 +63,7 @@ else
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
                     local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --pdf-engine=tectonic --standalone' .. ' --variable mainfont="DejaVu Sans Mono"'
+                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' .. ' OSFONTDIR=${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone --pdf-engine=tectonic'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
@@ -75,7 +82,7 @@ else
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
                     local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                    local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' ..  ' ${pkgs.pandoc}/bin/pandoc -t beamer' ..  current_file ..  ' -o ' ..  target ..  ' --standalone'
+                    local command = 'cd $(realpath $(dirname ' .. tostring(current_file) .. ')) && ' .. 'OSFONTDIR=${fontDir}/fonts ' .. '${pkgs.pandoc}/bin/pandoc ' .. current_file .. ' -o ' .. target .. ' --standalone --pdf-engine=tectonic'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
