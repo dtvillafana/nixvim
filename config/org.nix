@@ -8,7 +8,7 @@ if orgPath == null then
   { }
 else
   let
-    fontDir = pkgs.runCommand "pandoc-fonts" { } ''
+    font_dir = pkgs.runCommand "pandoc-fonts" { } ''
       mkdir -p $out/fonts
       ln -s ${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM/*.ttf $out/fonts/
     '';
@@ -82,7 +82,7 @@ else
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
                     local target = vim.fn.fnamemodify(current_file, ':p:r') .. '.pdf'
-                    local command = 'cd $(realpath $(dirname ' .. tostring(current_file) .. ')) && ' .. 'OSFONTDIR=${fontDir}/fonts ' .. '${pkgs.pandoc}/bin/pandoc ' .. current_file .. ' -o ' .. target .. ' --standalone --pdf-engine=tectonic'
+                    local command = 'cd $(realpath $(dirname ' .. tostring(current_file) .. ')) && ' .. 'OSFONTDIR=${font_dir}/fonts ' .. '${pkgs.pandoc}/bin/pandoc ' .. current_file .. ' -o ' .. target .. ' --standalone --pdf-engine=tectonic'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
