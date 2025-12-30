@@ -84,14 +84,30 @@ in
       };
       nixd = {
         enable = true;
-        settings = {
+        config = {
           cmd = [ "nixd" ];
           filetypes = [ "nix" ];
+          settings = {
+            nixd = {
+              options = {
+                nixvim = {
+                  expr = ''(builtins.getFlake "github:nix-community/nixvim").legacyPackages.${builtins.currentSystem}.nixvimConfiguration.options'';
+                };
+                # WARN: these options expressions for completions only work as long as my upstream flake is structured as it currently is
+                nixos = {
+                  expr = ''(builtins.getFlake "github:dtvillafana/dotfiles-nix").outputs.nixosConfigurations.thinkpad.options'';
+                };
+                home_manager = {
+                  expr = ''((builtins.getFlake "github:dtvillafana/dotfiles-nix").outputs.nixosConfigurations.thinkpad.options.home-manager.users.type.getSubOptions [])'';
+                };
+              };
+            };
+          };
         };
       };
       basedpyright = {
         enable = true;
-        settings = {
+        config = {
           cmd = [
             "basedpyright-langserver"
             "--stdio"
@@ -103,7 +119,7 @@ in
       };
       jsonls = {
         enable = true;
-        settings = {
+        config = {
           cmd = [
             "vscode-json-language-server"
             "--stdio"
@@ -115,14 +131,14 @@ in
       };
       lemminx = {
         enable = true;
-        settings = {
+        config = {
           cmd = [ "lemminx" ];
           filetypes = [ "xml" ];
         };
       };
       ts_ls = {
         enable = true;
-        settings = {
+        config = {
           cmd = [
             "typescript-language-server"
             "--stdio"
@@ -146,7 +162,7 @@ in
       };
       lua_ls = {
         enable = true;
-        settings = {
+        config = {
           telemetry.enable = false;
           diagnostics = {
             globals = [
