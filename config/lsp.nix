@@ -91,7 +91,7 @@ in
             nixd = {
               options = {
                 nixvim = {
-                  expr = ''(builtins.getFlake "github:nix-community/nixvim").legacyPackages.${builtins.currentSystem}.nixvimConfiguration.options'';
+                  expr = "(builtins.getFlake \"github:nix-community/nixvim\").legacyPackages.\${builtins.currentSystem}.nixvimConfiguration.options";
                 };
                 # WARN: these options expressions for completions only work as long as my upstream flake is structured as it currently is
                 nixos = {
