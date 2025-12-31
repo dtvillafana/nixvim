@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -10,8 +11,8 @@
       callback = {
         __raw = ''
           function()
-              vim.bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
-              vim.bo.equalprg =  "${pkgs.nixfmt-rfc-style}/bin/nixfmt"
+              vim.bo.equalprg =  "${lib.getExe pkgs.nixfmt-rfc-style}"
+              vim.opt_local.formatoptions:remove({ "r", "o" })
           end
         '';
       };
