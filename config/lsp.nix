@@ -75,7 +75,7 @@ in
       {
         mode = "n";
         key = "<leader>lx";
-        action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; local clients = vim.lsp.get_clients({name = 'basedpyright'}); for _, client in ipairs(clients) do vim.lsp.stop_client(client.id) end; vim.defer_fn(function() vim.lsp.start({name = 'basedpyright', cmd = {'basedpyright-langserver', '--stdio'}, settings = { basedpyright = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off', }, }, }, root_markers = {'.git', 'pyproject.toml', 'setup.py'}}) end, 100)<CR>";
+        action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; local clients = vim.lsp.get_clients({name = 'ty'}); for _, client in ipairs(clients) do vim.lsp.stop_client(client.id) end; vim.defer_fn(function() vim.lsp.start({name = 'ty', cmd = {'ty', 'server'}, settings = { ty = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off', }, }, }, root_markers = {'.git', 'pyproject.toml', 'setup.py'}}) end, 100)<CR>";
       }
     ];
     servers = {
@@ -105,12 +105,12 @@ in
           };
         };
       };
-      basedpyright = {
+      ty = {
         enable = true;
         config = {
           cmd = [
-            "basedpyright-langserver"
-            "--stdio"
+            "ty"
+            "server"
           ];
           filetypes = [
             "python"
