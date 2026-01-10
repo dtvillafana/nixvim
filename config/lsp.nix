@@ -105,6 +105,92 @@ in
           };
         };
       };
+      djlsp = {
+        enable = true;
+        package = pkgs.python3Packages.buildPythonPackage rec {
+          pname = "django_template_lsp";
+          version = "1.2.2";
+          format = "pyproject";
+
+          src = pkgs.python3Packages.fetchPypi {
+            inherit pname version;
+            hash = "sha256-FdzLsz3H70y4ThZzvwWD1UUrspuMskZWO4xbpOFBXIM=";
+          };
+
+          nativeBuildInputs = with pkgs.python3Packages; [
+            setuptools
+          ];
+
+          propagatedBuildInputs = with pkgs.python3Packages; [
+            pygls
+            lsprotocol
+            jedi
+          ];
+
+          meta = with lib; {
+            description = "Language server for Django templates";
+            homepage = "https://github.com/fourdigits/djlsp";
+            license = licenses.mit;
+          };
+        };
+        config = {
+          cmd = [
+            "djlsp"
+          ];
+          filetypes = [ "htmldjango" ];
+        };
+      };
+      htmx = {
+        enable = true;
+        config = {
+          cmd = [ "htmx-lsp" ];
+          filetypes = [
+            "aspnetcorerazor"
+            "astro"
+            "astro-markdown"
+            "blade"
+            "clojure"
+            "django-html"
+            "edge"
+            "eelixir"
+            "ejs"
+            "elixir"
+            "erb"
+            "eruby"
+            "gohtml"
+            "gohtmltmpl"
+            "haml"
+            "handlebars"
+            "hbs"
+            "heex"
+            "html"
+            "html-eex"
+            "htmlangular"
+            "htmldjango"
+            "jade"
+            "javascript"
+            "javascriptreact"
+            "leaf"
+            "liquid"
+            "markdown"
+            "mdx"
+            "mustache"
+            "njk"
+            "nunjucks"
+            "php"
+            "razor"
+            "reason"
+            "rescript"
+            "slim"
+            "svelte"
+            "templ"
+            "twig"
+            "typescript"
+            "typescriptreact"
+            "vue"
+          ];
+        };
+      };
       ty = {
         enable = true;
         config = {
