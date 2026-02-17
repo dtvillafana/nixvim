@@ -1,3 +1,47 @@
+{ pkgs, ... }:
+let
+  mssql_to_csv = pkgs.writeShellScript "mssql-to-csv" ''
+    ${pkgs.gawk}/bin/awk '
+    function trim(s){ sub(/^[ \t]+/,"",s); sub(/[ \t]+$/,"",s); return s }
+    function csv(s){
+      s=trim(s)
+      gsub(/"/,"\"\"",s)
+      return (s ~ /[",\r\n]/) ? "\"" s "\"" : s
+    }
+    function emit(line,   i,v,out){
+      out=""
+      for(i=1;i<=n;i++){
+        v = substr(line, starts[i], widths[i])
+        v = csv(v)
+        out = out (i==1 ? v : "," v)
+      }
+      print out
+    }
+
+    # skip "(xx rows affected)" lines anywhere
+    /^[(][0-9]+ rows affected[)]$/ { next }
+
+    NR==1 { header=$0; next }
+
+    NR==2 {
+      prev=""
+      for(i=1;i<=length($0);i++){
+        c=substr($0,i,1)
+        if(c=="-" && prev!="-") starts[++n]=i
+        if(c!="-" && prev=="-") ends[n]=i-1
+        prev=c
+      }
+      if(prev=="-") ends[n]=length($0)
+      for(i=1;i<=n;i++) widths[i]=ends[i]-starts[i]+1
+
+      emit(header)
+      next
+    }
+
+    NR>2 && $0 !~ /^[[:space:]]*$/ { emit($0) }
+    '
+  '';
+in
 {
   globals = {
     mapleader = " ";
@@ -264,6 +308,15 @@
       mode = "n";
       key = "<leader>mx";
       action = ":%s/\\r/<CR>:%s/.*<!.*-->.*\\n/<CR>:%s/>?</></g<CR>:%!xmlformat -<CR>";
+      options = {
+        noremap = true;
+        silent = true;
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>mc";
+      action = ":%!${mssql_to_csv}<CR>";
       options = {
         noremap = true;
         silent = true;
