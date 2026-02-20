@@ -261,17 +261,6 @@ in
       };
     }
 
-    # global replace visual selection
-    {
-      mode = "v";
-      key = "<leader>r";
-      action = "\"hy:%s/\\<<C-r>h\\>/<C-r>h/g<left><left>";
-      options = {
-        noremap = true;
-        silent = true;
-      };
-    }
-
     # Stay in indent mode when indenting
     {
       mode = "v";

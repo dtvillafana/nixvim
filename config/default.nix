@@ -15,6 +15,7 @@
     ./flash.nix
     ./formatters.nix
     ./gitsigns.nix
+    ./grugfar.nix
     ./indent-blankline.nix
     ./keymaps.nix
     ./lsp.nix
