@@ -90,6 +90,16 @@
       };
     }
     {
+      mode = "x";
+      key = "<leader>ts";
+      action = ''<CMD>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { index = vim.v.count })<CR>'';
+      options = {
+        noremap = true;
+        silent = true;
+        desc = "Send visual selection to terminal [count]";
+      };
+    }
+    {
       mode = "n";
       key = "<leader>tj";
       action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'nodejs', hidden = true, close_on_exit = true, direction = 'float', display_name = 'nodejs' }):toggle()<CR>'';
