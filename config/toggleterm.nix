@@ -91,18 +91,48 @@
     }
     {
       mode = "x";
-      key = "<leader>ts";
-      action = ''<CMD>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { index = vim.v.count })<CR>'';
+      key = "<leader>tsf";
+      action = '':<C-u>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { args = tostring(vim.v.count) })<CR>'';
       options = {
         noremap = true;
         silent = true;
-        desc = "Send visual selection to terminal [count]";
+        desc = "Send visual selection to float terminal [count]";
+      };
+    }
+    {
+      mode = "x";
+      key = "<leader>tsv";
+      action = '':<C-u>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { args = tostring(vim.v.count + 10) })<CR>'';
+      options = {
+        noremap = true;
+        silent = true;
+        desc = "Send visual selection to vertical terminal [count]";
+      };
+    }
+    {
+      mode = "x";
+      key = "<leader>tsh";
+      action = '':<C-u>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { args = tostring(vim.v.count + 20) })<CR>'';
+      options = {
+        noremap = true;
+        silent = true;
+        desc = "Send visual selection to horizontal terminal [count]";
+      };
+    }
+    {
+      mode = "x";
+      key = "<leader>tst";
+      action = '':<C-u>lua require('toggleterm').send_lines_to_terminal("visual_selection", true, { args = tostring(vim.v.count + 30) })<CR>'';
+      options = {
+        noremap = true;
+        silent = true;
+        desc = "Send visual selection to tab terminal [count]";
       };
     }
     {
       mode = "n";
       key = "<leader>tj";
-      action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'nodejs', hidden = true, close_on_exit = true, direction = 'float', display_name = 'nodejs' }):toggle()<CR>'';
+      action = ''<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = '${pkgs.nodejs}/bin/node', hidden = true, close_on_exit = true, direction = 'float', display_name = 'nodejs' }):toggle()<CR>'';
       options = {
         noremap = true;
         silent = true;
