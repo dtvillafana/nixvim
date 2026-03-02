@@ -2,7 +2,7 @@
   description = "David's Nixvim config";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*";
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,7 +41,7 @@
                 imagemagick
                 lazygit
                 nix-direnv
-                nixfmt-rfc-style
+                nixfmt
                 ripgrep
                 xclip
               ];

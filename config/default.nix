@@ -39,6 +39,7 @@
     ./todo-comments.nix
     ./toggleterm.nix
     ./treesitter.nix
+    ./trouble.nix
     ./whichkey.nix
     ./window-picker.nix
   ];

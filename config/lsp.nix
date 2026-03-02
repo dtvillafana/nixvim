@@ -5,111 +5,45 @@
 }:
 let
 
-  ansible_ls =
-    let
-      pname = "ansible-language-server";
-      version = "26.1.3";
-
-      src = pkgs.fetchFromGitHub {
-        owner = "ansible";
-        repo = "vscode-ansible";
-        tag = "v${version}";
-        hash = "sha256-DsEW3xP8Fa9nwPuyEFVqG6rvAZgr4TDB6jhyixdvqt8=";
-      };
-
-      # Fixed-output derivation to fetch yarn berry dependencies
-      offlineCache = pkgs.stdenvNoCC.mkDerivation {
-        name = "${pname}-${version}-yarn-cache";
-        inherit src;
-
-        nativeBuildInputs = [
-          pkgs.yarn-berry
-          pkgs.nodejs
-          pkgs.cacert
+  py = (pkgs.python313.override {
+    packageOverrides = self: super: {
+      jaraco-test = super.jaraco-test.overridePythonAttrs { doCheck = false; };
+      importlib-resources = super.importlib-resources.overridePythonAttrs { doCheck = false; };
+      lsprotocol = self.buildPythonPackage rec {
+        pname = "lsprotocol";
+        version = "2023.0.1";
+        format = "pyproject";
+        src = self.fetchPypi {
+          inherit pname version;
+          hash = "sha256-zFwVEw0kA8GLc0MEM55RJC0wGKBcT30PGYrW4M0hhh0=";
+        };
+        nativeBuildInputs = [ self.flit-core self.poetry-core ];
+        propagatedBuildInputs = [
+          self.cattrs
+          self.attrs
         ];
-
-        outputHashMode = "recursive";
-        outputHashAlgo = "sha256";
-        outputHash = "sha256-NYbHhvlVoSL7lT1EdFkNJlmzRzQ0Gudo5pF0t6JtSic=";
-
-        buildPhase = ''
-          export HOME=$TMPDIR
-          export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
-
-          yarn config set enableTelemetry false
-          yarn config set enableGlobalCache false
-          yarn config set cacheFolder .yarn/cache
-          yarn install --mode=skip-build
-
-          mkdir -p $out
-          cp -r .yarn/cache/* $out/
-          cp .yarnrc.yml $out/ || true
-        '';
-
-        dontInstall = true;
+        doCheck = false;
       };
-
-    in
-    pkgs.stdenvNoCC.mkDerivation {
-      inherit pname version src;
-
-      nativeBuildInputs = with pkgs; [
-        yarn-berry
-        nodejs
-        makeWrapper
-      ];
-
-      buildPhase = ''
-        export HOME=$TMPDIR
-
-        # Set up yarn cache from our FOD
-        mkdir -p .yarn/cache
-        for f in ${offlineCache}/*; do
-          if [ "$(basename $f)" != ".yarnrc.yml" ]; then
-            cp -r "$f" .yarn/cache/
-          fi
-        done
-
-        yarn config set enableTelemetry false
-        yarn config set enableGlobalCache false
-        yarn config set cacheFolder .yarn/cache
-        yarn config set enableNetwork false
-
-        # Only install deps for ansible-language-server workspace
-        yarn workspaces focus @ansible/ansible-language-server
-
-        # Build ansible-language-server (exclude tests)
-        cd packages/ansible-language-server
-        rm -rf test
-        yarn run compile
-      '';
-
-      installPhase = ''
-        mkdir -p $out/lib/node_modules/ansible-language-server
-        cp -r out package.json $out/lib/node_modules/ansible-language-server/
-
-        # Copy node_modules (yarn berry installs them at workspace root)
-        # Use -L to dereference symlinks (yarn creates symlinks for workspace packages)
-        cd ../..
-        cp -rL node_modules $out/lib/node_modules/ansible-language-server/
-
-        mkdir -p $out/lib/node_modules/ansible-language-server/bin
-        cp packages/ansible-language-server/bin/ansible-language-server $out/lib/node_modules/ansible-language-server/bin/
-
-        mkdir -p $out/bin
-        makeWrapper ${pkgs.nodejs}/bin/node $out/bin/ansible-language-server \
-          --prefix PATH : ${pkgs.python3}/bin \
-          --add-flags "$out/lib/node_modules/ansible-language-server/out/server/src/server.js"
-      '';
-
-      meta = with lib; {
-        changelog = "https://github.com/ansible/vscode-ansible/releases/tag/v${version}";
-        description = "Ansible Language Server";
-        mainProgram = "ansible-language-server";
-        homepage = "https://github.com/ansible/vscode-ansible";
-        license = licenses.mit;
+      pygls = self.buildPythonPackage rec {
+        pname = "pygls";
+        version = "1.3.1";
+        format = "pyproject";
+        src = self.fetchPypi {
+          inherit pname version;
+          hash = "sha256-FA7c7voNoOmzxTNUfIkqQqfS/ZIXroSMMwxT0malUBg=";
+        };
+        nativeBuildInputs = [ self.poetry-core self.setuptools self.setuptools-scm ];
+        propagatedBuildInputs = [
+          self.cattrs
+          self.lsprotocol
+        ];
+        doCheck = false;
       };
+      jedi = super.jedi.overridePythonAttrs { doCheck = false; };
+      poetry-core = super.poetry-core.overridePythonAttrs { doCheck = false; };
+      cattrs = super.cattrs.overridePythonAttrs { doCheck = false; };
     };
+  }).pkgs;
 
 in
 {
@@ -135,12 +69,6 @@ in
         lspBufAction = "hover";
         mode = "n";
       }
-      # Diagnostics
-      {
-        key = "<leader>lde";
-        action = "<CMD>lua vim.diagnostic.open_float()<Enter>";
-        mode = "n";
-      }
       # Python server specific
       {
         mode = "n";
@@ -151,7 +79,7 @@ in
     servers = {
       ansible = {
         enable = true;
-        package = ansible_ls;
+        package = pkgs.ansible-language-server;
         config = {
           cmd = [
             "ansible-language-server"
@@ -223,25 +151,27 @@ in
       };
       djlsp = {
         enable = true;
-        package = pkgs.python3Packages.buildPythonPackage rec {
+        package = py.buildPythonPackage rec {
           pname = "django_template_lsp";
           version = "1.2.2";
           format = "pyproject";
 
-          src = pkgs.python3Packages.fetchPypi {
+          src = py.fetchPypi {
             inherit pname version;
             hash = "sha256-FdzLsz3H70y4ThZzvwWD1UUrspuMskZWO4xbpOFBXIM=";
           };
 
-          nativeBuildInputs = with pkgs.python3Packages; [
+          nativeBuildInputs = with py; [
             setuptools
           ];
 
-          propagatedBuildInputs = with pkgs.python3Packages; [
+          propagatedBuildInputs = with py; [
             pygls
             lsprotocol
             jedi
           ];
+
+          doCheck = false;
 
           meta = with lib; {
             description = "Language server for Django templates";

@@ -188,6 +188,20 @@
             color = { fg = '#ffffff', gui = 'bold' },
         })
 
+        local trouble = require("trouble")
+        local symbols = trouble.statusline({
+            mode = "lsp_document_symbols",
+            groups = {},
+            title = false,
+            filter = { range = true },
+            format = "{kind_icon}{symbol.name:Normal}",
+            hl_group = "lualine_c_normal",
+        })
+        ins_left({
+            symbols.get,
+            cond = symbols.has,
+        })
+
         -- Add components to right sections
         ins_right({
             'o:encoding', -- option component same as &encoding in viml

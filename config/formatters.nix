@@ -11,7 +11,7 @@
       callback = {
         __raw = ''
           function()
-              vim.bo.equalprg =  "${lib.getExe pkgs.nixfmt-rfc-style}"
+              vim.bo.equalprg =  "${lib.getExe pkgs.nixfmt}"
               vim.opt_local.formatoptions:remove({ "r", "o" })
           end
         '';
