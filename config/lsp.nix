@@ -77,14 +77,9 @@ in
       }
     ];
     servers = {
-      ansible = {
+      ansiblels = {
         enable = true;
-        package = pkgs.ansible-language-server;
         config = {
-          cmd = [
-            "ansible-language-server"
-            "--stdio"
-          ];
           filetypes = [
             "yaml.ansible"
           ];

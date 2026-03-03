@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*";
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:dtvillafana/nixvim-for-pr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
