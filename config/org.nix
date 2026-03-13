@@ -12,6 +12,8 @@ else
       mkdir -p $out/fonts
       ln -s ${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM/*.ttf $out/fonts/
     '';
+    org_treesitter =
+      pkgs.luajitPackages."tree-sitter-orgmode" or pkgs.lua51Packages."tree-sitter-orgmode";
   in
   {
     extraPackages = with pkgs; [
@@ -34,6 +36,25 @@ else
     ];
     plugins = {
       orgmode = {
+        package = pkgs.vimUtils.buildVimPlugin {
+          name = "orgmode";
+          src = pkgs.fetchFromGitHub {
+            owner = "dtvillafana";
+            repo = "orgmode";
+            rev = "master";
+            hash = "sha256-SrANihX1/znyGdBmtYnHgWEpPUPvvo61uNkCqG+BpxI=";
+          };
+          doCheck = false;
+          postPatch = ''
+            substituteInPlace lua/orgmode/config/init.lua \
+              --replace-fail \
+              "return require('orgmode.utils.treesitter.install').install()" \
+              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/lib/lua/5.1/parser/org.so'}) end)" \
+              --replace-fail \
+              "return require('orgmode.utils.treesitter.install').reinstall()" \
+              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/lib/lua/5.1/parser/org.so'}) end)"
+          '';
+        };
         enable = true;
         settings = {
           # Limit scope to specific directories or files for better performance
@@ -203,6 +224,16 @@ else
       #   doCheck = false;
       # })
       (pkgs.vimUtils.buildVimPlugin {
+        name = "org-super-agenda.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "hamidi-dev";
+          repo = "org-super-agenda.nvim";
+          rev = "main";
+          hash = "sha256-4O7wyPoYFtGLi/TYy9U6kildyr+RCpUsqb0vr4Aovw4=";
+        };
+        doCheck = false;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
         name = "telescope-orgmode";
         src = pkgs.fetchFromGitHub {
           owner = "nvim-orgmode";
@@ -214,6 +245,85 @@ else
       })
     ];
     extraConfigLua = ''
+      local org_super_agenda_ok, org_super_agenda = pcall(require, 'org-super-agenda')
+      if org_super_agenda_ok then
+          org_super_agenda.setup({
+              org_directories = { '${orgPath}' },
+              todo_states = {
+                  { name = 'TODO', shortcut = 't', keymap = 'ot', color = '#ff6b6b', strike_through = false, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'MEET', shortcut = 'm', keymap = 'om', color = '#4dabf7', strike_through = false, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'CALL', shortcut = 'c', keymap = 'oc', color = '#74c0fc', strike_through = false, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'EVENT', shortcut = 'e', keymap = 'oe', color = '#ffd43b', strike_through = false, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'WAITING', shortcut = 'w', keymap = 'ow', color = '#b197fc', strike_through = false, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'DONE', shortcut = 'd', keymap = 'od', color = '#69db7c', strike_through = true, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+                  { name = 'CANCELED', shortcut = 'a', keymap = 'ox', color = '#868e96', strike_through = true, fields = { 'filename', 'todo', 'headline', 'priority', 'date', 'tags' } },
+              },
+              groups = {
+                  {
+                      name = 'Today',
+                      matcher = function(item)
+                          return item.scheduled and item.scheduled:is_today()
+                      end,
+                      sort = { by = 'scheduled_time', order = 'asc' },
+                  },
+                  {
+                      name = 'Overdue',
+                      matcher = function(item)
+                          return item.todo_state ~= 'DONE'
+                              and item.todo_state ~= 'CANCELED'
+                              and (
+                                  (item.deadline and item.deadline:is_past())
+                                  or (item.scheduled and item.scheduled:is_past())
+                              )
+                      end,
+                      sort = { by = 'date_nearest', order = 'asc' },
+                  },
+                  {
+                      name = 'Upcoming',
+                      matcher = function(item)
+                          local days = require('org-super-agenda.config').get().upcoming_days or 7
+                          local deadline_days = item.deadline and item.deadline:days_from_today()
+                          local scheduled_days = item.scheduled and item.scheduled:days_from_today()
+                          return (deadline_days and deadline_days >= 0 and deadline_days <= days)
+                              or (scheduled_days and scheduled_days >= 0 and scheduled_days <= days)
+                      end,
+                      sort = { by = 'date_nearest', order = 'asc' },
+                  },
+                  {
+                      name = 'Waiting',
+                      matcher = function(item)
+                          return item.todo_state == 'WAITING'
+                      end,
+                  },
+                  {
+                      name = 'Meetings',
+                      matcher = function(item)
+                          return item.todo_state == 'MEET'
+                      end,
+                  },
+                  {
+                      name = 'Calls',
+                      matcher = function(item)
+                          return item.todo_state == 'CALL'
+                      end,
+                  },
+                  {
+                      name = 'Events',
+                      matcher = function(item)
+                          return item.todo_state == 'EVENT'
+                      end,
+                  },
+              },
+              upcoming_days = 7,
+              hide_empty_groups = true,
+          })
+
+          vim.keymap.set('n', '<leader>oa', '<CMD>OrgSuperAgenda<CR>', {
+              silent = true,
+              desc = 'Org Super Agenda',
+          })
+      end
+
       -- Add a more efficient setup for org-roam
       --    vim.defer_fn(function()
       --    require('org-roam').setup({
