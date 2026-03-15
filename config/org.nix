@@ -239,7 +239,7 @@ else
           owner = "nvim-orgmode";
           repo = "telescope-orgmode.nvim";
           rev = "master";
-          hash = "sha256-dTCsYNfxtm0hMgn/JcNMyL4YFP4+p0oBkAOywtXGbeI=";
+          hash = "sha256-UaK+ct04Y4lNEZ93NzCkgzQYbpAeTnpbGEZ8wZiAxtM=";
         };
         doCheck = false;
       })
