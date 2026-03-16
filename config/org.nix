@@ -1,3 +1,6 @@
+# use these to control PDF export formatting
+# #+PDF_FONT_SCALE: 90%
+# #+PDF_PAGE_MARGIN: 0.2in
 {
   pkgs,
   lib,
@@ -12,11 +15,17 @@ else
       mkdir -p $out/fonts
       ln -s ${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM/*.ttf $out/fonts/
     '';
+    pico_css = pkgs.fetchurl {
+      url = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css";
+      sha256 = "1nx3kc8s20vhn93d3jprwixgga8zw439iz6p5z8p57zwr4zsdjgv";
+    };
     org_treesitter =
       pkgs.luajitPackages."tree-sitter-orgmode" or pkgs.lua51Packages."tree-sitter-orgmode";
   in
   {
     extraPackages = with pkgs; [
+      chromium
+      emacs
       tectonic
       (texlive.withPackages (
         p: with p; [
@@ -78,8 +87,8 @@ else
           org_agenda_skip_deadline_if_done = true;
           org_agenda_skip_scheduled_if_done = true;
           org_custom_exports = {
-            f = {
-              label = "Export to standalone PDF";
+            t = {
+              label = "Export to standalone PDF (tectonic)";
               action = lib.generators.mkLuaInline ''
                 function(exporter)
                     local current_file = vim.api.nvim_buf_get_name(0)
@@ -87,6 +96,41 @@ else
                     local command = 'cd ' ..  ' $(realpath $(dirname ' .. tostring(current_file) .. ')) ' ..  ' &&' .. ' OSFONTDIR=${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM ${pkgs.pandoc}/bin/pandoc ' ..  current_file ..  ' -o ' ..  target ..  ' --standalone --pdf-engine=tectonic'
                     local on_success = function(output)
                         print('Success! exported to ' .. target)
+                        vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
+                    end
+                    local on_error = function(err)
+                        print('Error!')
+                        vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
+                    end
+                    return exporter(command, target, on_success, on_error)
+                end
+              '';
+            };
+            w = {
+              label = "Export to HTML PDF (Chromium)";
+              action = lib.generators.mkLuaInline ''
+                function(exporter)
+                    local current_file = vim.api.nvim_buf_get_name(0)
+                    local base = vim.fn.fnamemodify(current_file, ':p:r')
+                    local target = base .. '.pdf'
+                    local html_target = base .. '.html'
+                    local file_escaped = vim.fn.shellescape(current_file)
+                    local pdf_escaped = vim.fn.shellescape(target)
+                    local file_url_escaped = vim.fn.shellescape('file://' .. html_target)
+                    local emacs_eval = vim.fn.shellescape(
+                      string.format(
+                        "(progn (require 'org) (require 'ox-html) (find-file %q) (let* ((org-export-with-toc nil) (org-html-postamble nil) (font-scale (or (car (cdr (assoc \"PDF_FONT_SCALE\" (org-collect-keywords '(\"PDF_FONT_SCALE\"))))) \"75%%\")) (page-margin (or (car (cdr (assoc \"PDF_PAGE_MARGIN\" (org-collect-keywords '(\"PDF_PAGE_MARGIN\"))))) \"0.35in\")) (org-html-head (concat \"<link rel=\\\"stylesheet\\\" href=\\\"file://${pico_css}\\\"><style>:root{--org-pdf-font-scale:\" font-scale \"}@page{margin:\" page-margin \"}html{font-size:var(--org-pdf-font-scale)}body{margin:0}main.container{padding:0;max-width:none;width:100%%}#content{margin:0}.title{margin-bottom:2rem}.subtitle{color:var(--muted-color)}.org-src-container,pre.src,pre.example{padding:1rem;border-radius:var(--pico-border-radius);background:var(--pico-code-background,#f5f7f8);overflow-x:auto}table{width:100%%}#table-of-contents{display:none}</style>\")) (org-html-head-include-default-style nil)) (org-html-export-to-html nil nil nil nil nil)))",
+                        current_file
+                      )
+                    )
+                    local command =
+                      'cd $(realpath $(dirname ' .. file_escaped .. ')) && ' ..
+                      '${pkgs.emacs}/bin/emacs --batch ' .. file_escaped .. ' --eval ' .. emacs_eval .. ' && ' ..
+                      "perl -0pi -e 's#<body([^>]*)>#<body$1><main class=\"container\">#; s#</body>#</main></body>#' " .. vim.fn.shellescape(html_target) .. ' && ' ..
+                      '${pkgs.chromium}/bin/chromium --headless --disable-gpu --allow-file-access-from-files --no-pdf-header-footer ' ..
+                      '--print-to-pdf=' .. pdf_escaped .. ' ' .. file_url_escaped .. ' 2>/dev/null'
+                    local on_success = function(output)
+                        print('Success! exported to ' .. target .. ' via ' .. html_target)
                         vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
                     end
                     local on_error = function(err)
@@ -224,6 +268,26 @@ else
       #   doCheck = false;
       # })
       (pkgs.vimUtils.buildVimPlugin {
+        name = "org-modern.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "danilshvalov";
+          repo = "org-modern.nvim";
+          rev = "main";
+          hash = "sha256-TYs3g5CZDVXCFXuYaj3IriJ4qlIOxQgArVOzT7pqkqs=";
+        };
+        doCheck = false;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "headlines.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "lukas-reineke";
+          repo = "headlines.nvim";
+          rev = "master";
+          hash = "sha256-LWYYVnLZgw6DhO/n0rclQVnon5TvyQVUGb2smaBzcPg=";
+        };
+        doCheck = false;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
         name = "org-super-agenda.nvim";
         src = pkgs.fetchFromGitHub {
           owner = "hamidi-dev";
@@ -245,6 +309,35 @@ else
       })
     ];
     extraConfigLua = ''
+      local headlines_ok, headlines = pcall(require, 'headlines')
+      if headlines_ok then
+          headlines.setup()
+      end
+
+      local org_modern_menu_ok, OrgModernMenu = pcall(require, 'org-modern.menu')
+      if org_modern_menu_ok then
+          require('orgmode').setup({
+              ui = {
+                  menu = {
+                      handler = function(data)
+                          OrgModernMenu:new({
+                              window = {
+                                  margin = { 1, 0, 1, 0 },
+                                  padding = { 0, 1, 0, 1 },
+                                  title_pos = 'center',
+                                  border = 'single',
+                                  zindex = 1000,
+                              },
+                              icons = {
+                                  separator = '➜',
+                              },
+                          }):open(data)
+                      end,
+                  },
+              },
+          })
+      end
+
       local org_super_agenda_ok, org_super_agenda = pcall(require, 'org-super-agenda')
       if org_super_agenda_ok then
           org_super_agenda.setup({
