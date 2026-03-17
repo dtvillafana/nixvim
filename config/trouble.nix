@@ -8,7 +8,7 @@
     {
       mode = "n";
       key = "<leader>ldf";
-      action = "<cmd>Trouble diagnostics toggle filter.buf=0 win.position=right focus=true<cr>";
+      action = "<cmd>Trouble diagnostics toggle filter.buf=0 win.position=bottom focus=true<cr>";
       options.desc = "Buffer Diagnostics";
     }
     {
