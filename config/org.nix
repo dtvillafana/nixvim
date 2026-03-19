@@ -45,13 +45,14 @@ else
     ];
     plugins = {
       orgmode = {
+        enable = true;
         package = pkgs.vimUtils.buildVimPlugin {
           name = "orgmode";
           src = pkgs.fetchFromGitHub {
             owner = "dtvillafana";
-            repo = "orgmode";
+            repo = "orgmode-notifications";
             rev = "master";
-            hash = "sha256-SrANihX1/znyGdBmtYnHgWEpPUPvvo61uNkCqG+BpxI=";
+            hash = "sha256-/Yk6Je/9M64yKQh1naC7+ohmQ/XOaPkbX/XheEpNNzA=";
           };
           doCheck = false;
           postPatch = ''
@@ -64,7 +65,6 @@ else
               "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/lib/lua/5.1/parser/org.so'}) end)"
           '';
         };
-        enable = true;
         settings = {
           # Limit scope to specific directories or files for better performance
           # Consider changing this to only include frequently used directories
@@ -83,6 +83,7 @@ else
             "|"
             "DONE(d)"
             "CANCELED(a)"
+            "DELEGATED(l)"
           ];
           org_agenda_skip_deadline_if_done = true;
           org_agenda_skip_scheduled_if_done = true;
@@ -206,67 +207,22 @@ else
             ];
             deadline_reminder = true;
             scheduled_reminder = true;
-            # Improved async notifier that won't block UI
-            notifier = ''
-              function(tasks)
-                  -- Process small batches of tasks to avoid UI freezes
-                  local function process_tasks_batch(all_tasks, start_idx, batch_size)
-                      local result = {}
-                      local end_idx = math.min(start_idx + batch_size - 1, #all_tasks)
-
-                      for i = start_idx, end_idx do
-                          local task = all_tasks[i]
-                          require('orgmode.utils').concat(result, {
-                              string.format('# %s (%s)', task.category, task.humanized_duration),
-                              string.format('%s %s %s', string.rep('*', task.level), task.todo, task.title),
-                              string.format('%s: <%s>', task.type, task.time:to_string()),
-                          })
-                      end
-
-                      local msg = table.concat(result, '\n')
-                      if msg ~= "" then
-                          require('noice').notify(msg, 'info', {
-                              title = 'OrgNotify ' .. start_idx .. '-' .. end_idx,
-                              on_open = function(win)
-                                  local buf_id = vim.api.nvim_win_get_buf(win)
-                                  vim.api.nvim_set_option_value('filetype', 'org', { buf = buf_id })
-                              end,
-                          })
-                      end
-
-                      -- Schedule next batch if there are more tasks
-                      if end_idx < #all_tasks then
-                          vim.defer_fn(function()
-                              process_tasks_batch(all_tasks, end_idx + 1, batch_size)
-                          end, 10) -- 10ms delay between batches
-                      end
-                  end
-
-                  -- Start processing in batches
-                  if #tasks > 0 then
-                      vim.defer_fn(function()
-                          process_tasks_batch(tasks, 1, 5) -- Process 5 tasks at a time
-                      end, 0)
-                  end
-              end,
-            '';
-            cron_notifier = null;
           };
         };
       };
     };
 
     extraPlugins = [
-      # (pkgs.vimUtils.buildVimPlugin {
-      #   name = "org-roam";
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "chipsenkbeil";
-      #     repo = "org-roam.nvim";
-      #     rev = "master";
-      #     hash = "sha256-k/odVuPx6YdX8Cc+DZmVgo3M+NTpKQbFgSMtDe+UwUE=";
-      #   };
-      #   doCheck = false;
-      # })
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "org-bullets";
+        src = pkgs.fetchFromGitHub {
+          owner = "nvim-orgmode";
+          repo = "org-bullets.nvim";
+          rev = "main";
+          hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
+        };
+        doCheck = false;
+      })
       (pkgs.vimUtils.buildVimPlugin {
         name = "org-modern.nvim";
         src = pkgs.fetchFromGitHub {
@@ -274,16 +230,6 @@ else
           repo = "org-modern.nvim";
           rev = "main";
           hash = "sha256-TYs3g5CZDVXCFXuYaj3IriJ4qlIOxQgArVOzT7pqkqs=";
-        };
-        doCheck = false;
-      })
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "headlines.nvim";
-        src = pkgs.fetchFromGitHub {
-          owner = "lukas-reineke";
-          repo = "headlines.nvim";
-          rev = "master";
-          hash = "sha256-LWYYVnLZgw6DhO/n0rclQVnon5TvyQVUGb2smaBzcPg=";
         };
         doCheck = false;
       })
@@ -309,11 +255,7 @@ else
       })
     ];
     extraConfigLua = ''
-      local headlines_ok, headlines = pcall(require, 'headlines')
-      if headlines_ok then
-          headlines.setup()
-      end
-
+      require('org-bullets').setup()
       local org_modern_menu_ok, OrgModernMenu = pcall(require, 'org-modern.menu')
       if org_modern_menu_ok then
           require('orgmode').setup({
@@ -417,13 +359,6 @@ else
           })
       end
 
-      -- Add a more efficient setup for org-roam
-      --    vim.defer_fn(function()
-      --    require('org-roam').setup({
-      --    directory = '${orgPath}roam',
-      --    })
-      -- end, 100) -- Delay loading slightly
-
       -- Lazy-load telescope extension
       vim.defer_fn(function()
           local status_ok, telescope = pcall(require, 'telescope')
@@ -441,31 +376,6 @@ else
               end,
           })
       end, 200) -- Load after org-roam
-
-      -- Add a global command to disable/enable org notifications temporarily
-      vim.api.nvim_create_user_command('OrgNotifyToggle', function()
-          if vim.g.org_notify_disabled then
-              vim.g.org_notify_disabled = nil
-              vim.notify('Org notifications enabled')
-              -- Re-enable the notifications
-              require('orgmode').setup({
-                  notifications = {
-                      enabled = true,
-                      cron_enabled = false
-                  }
-              })
-          else
-              vim.g.org_notify_disabled = true
-              vim.notify('Org notifications disabled')
-              require('orgmode').setup({
-                  notifications = {
-                      enabled = false,
-                      cron_enabled = false
-                  }
-              })
-              -- You could add code here to stop any existing notification timers
-          end
-      end, {})
 
       -- Add a function to limit org agenda scope temporarily
       vim.api.nvim_create_user_command('OrgLimitAgendaScope', function(opts)
