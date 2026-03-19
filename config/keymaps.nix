@@ -6,14 +6,14 @@ let
     function csv(s){
       s=trim(s)
       gsub(/"/,"\"\"",s)
-      return (s ~ /[",\r\n]/) ? "\"" s "\"" : s
+      return (s ~ /["|\r\n]/) ? "\"" s "\"" : s
     }
     function emit(line,   i,v,out){
       out=""
       for(i=1;i<=n;i++){
         v = substr(line, starts[i], widths[i])
         v = csv(v)
-        out = out (i==1 ? v : "," v)
+        out = out (i==1 ? v : "|" v)
       }
       print out
     }
