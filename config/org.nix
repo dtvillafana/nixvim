@@ -19,8 +19,17 @@ else
       url = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css";
       sha256 = "1nx3kc8s20vhn93d3jprwixgga8zw439iz6p5z8p57zwr4zsdjgv";
     };
-    org_treesitter =
-      pkgs.luajitPackages."tree-sitter-orgmode" or pkgs.lua51Packages."tree-sitter-orgmode";
+    org_treesitter = pkgs.tree-sitter.buildGrammar {
+      language = "org";
+      version = "2.0.3";
+      src = pkgs.fetchFromGitHub {
+        owner = "nvim-orgmode";
+        repo = "tree-sitter-org";
+        rev = "next";
+        hash = "sha256-Ok4BlEshQSAxxIdqPWgYx82ksqm6XJ5G9oXpD94Oozg=";
+      };
+      meta.homepage = "https://github.com/nvim-orgmode/tree-sitter-org";
+    };
   in
   {
     extraPackages = with pkgs; [
@@ -44,25 +53,30 @@ else
       ))
     ];
     plugins = {
+      treesitter = {
+        grammarPackages = [
+          org_treesitter
+        ];
+      };
       orgmode = {
         enable = true;
         package = pkgs.vimUtils.buildVimPlugin {
           name = "orgmode";
           src = pkgs.fetchFromGitHub {
             owner = "dtvillafana";
-            repo = "orgmode-notifications";
-            rev = "master";
-            hash = "sha256-/Yk6Je/9M64yKQh1naC7+ohmQ/XOaPkbX/XheEpNNzA=";
+            repo = "orgmode";
+            rev = "personal";
+            hash = "sha256-1juZEpKzSN3b0UtkUyuBPSG/nztvnErZedOq5TGVpOo=";
           };
           doCheck = false;
           postPatch = ''
             substituteInPlace lua/orgmode/config/init.lua \
               --replace-fail \
               "return require('orgmode.utils.treesitter.install').install()" \
-              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/lib/lua/5.1/parser/org.so'}) end)" \
+              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/parser'}) end)" \
               --replace-fail \
               "return require('orgmode.utils.treesitter.install').reinstall()" \
-              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/lib/lua/5.1/parser/org.so'}) end)"
+              "return pcall(function() vim.treesitter.language.add('org', { path = '${org_treesitter}/parser'}) end)"
           '';
         };
         settings = {
@@ -209,6 +223,20 @@ else
             scheduled_reminder = true;
           };
         };
+        luaConfig.post = ''
+          vim.api.nvim_create_autocmd('FileType', {
+             pattern = 'org',
+             group = vim.api.nvim_create_augroup('org_indent_fix', { clear = true }),
+             callback = function()
+               vim.bo.indentexpr = 'nvim_treesitter#indent()'
+               -- OrgIndent handles visual indentation; for = formatting, use orgmode's indent
+               local ok, orgmode = pcall(require, 'orgmode')
+               if ok then
+                   vim.bo.indentexpr = "v:lua.require('orgmode.org.indent').indentexpr()"
+               end
+             end,
+          })
+        '';
       };
     };
 
@@ -395,5 +423,7 @@ else
               end
           end
       end, {nargs = '?'})
+
+
     '';
   }
