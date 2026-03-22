@@ -228,7 +228,6 @@ else
              pattern = 'org',
              group = vim.api.nvim_create_augroup('org_indent_fix', { clear = true }),
              callback = function()
-               vim.bo.indentexpr = 'nvim_treesitter#indent()'
                -- OrgIndent handles visual indentation; for = formatting, use orgmode's indent
                local ok, orgmode = pcall(require, 'orgmode')
                if ok then
