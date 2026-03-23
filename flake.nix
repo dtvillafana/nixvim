@@ -65,6 +65,11 @@
           packages = {
             # Lets you run `nix run .` to start nixvim
             default = nvim;
+            # Lets you run `nix run .#print-init-lua` to print the path to the built init.lua
+            print-init-lua = pkgs.writeShellScriptBin "print-init-lua" ''
+              grep -oP '/nix/store/\S*-init\.lua' ${nvim}/bin/nvim
+              grep -oP '/nix/store/\S*-vim-pack-dir' ${nvim}/bin/nvim | head -1
+            '';
           };
         };
     };

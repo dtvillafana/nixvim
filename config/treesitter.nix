@@ -48,6 +48,7 @@ in
         };
         indent = {
           enable = true;
+          disable = [ "org" ];
         };
       };
     };
