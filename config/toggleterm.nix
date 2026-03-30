@@ -32,9 +32,9 @@
         local entry = actions_state.get_selected_entry()
         if entry then
           local term = entry.value
-          for _, line in ipairs(lines) do
-            term:send(line, false)
-          end
+          local text = table.concat(lines, "\n")
+          -- terminal paste escape sequences
+          vim.fn.chansend(term.job_id, "\27[200~" .. text .. "\27[201~")
         end
       end
       require('toggleterm-manager').setup({
