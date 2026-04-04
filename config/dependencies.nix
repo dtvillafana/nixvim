@@ -1,4 +1,4 @@
-{ system, pkgs, ... }:
+{ pkgs, ... }:
 {
   dependencies = {
     direnv = {

@@ -5,45 +5,53 @@
 }:
 let
 
-  py = (pkgs.python313.override {
-    packageOverrides = self: super: {
-      jaraco-test = super.jaraco-test.overridePythonAttrs { doCheck = false; };
-      importlib-resources = super.importlib-resources.overridePythonAttrs { doCheck = false; };
-      lsprotocol = self.buildPythonPackage rec {
-        pname = "lsprotocol";
-        version = "2023.0.1";
-        format = "pyproject";
-        src = self.fetchPypi {
-          inherit pname version;
-          hash = "sha256-zFwVEw0kA8GLc0MEM55RJC0wGKBcT30PGYrW4M0hhh0=";
+  py =
+    (pkgs.python313.override {
+      packageOverrides = self: super: {
+        jaraco-test = super.jaraco-test.overridePythonAttrs { doCheck = false; };
+        importlib-resources = super.importlib-resources.overridePythonAttrs { doCheck = false; };
+        lsprotocol = self.buildPythonPackage rec {
+          pname = "lsprotocol";
+          version = "2023.0.1";
+          format = "pyproject";
+          src = self.fetchPypi {
+            inherit pname version;
+            hash = "sha256-zFwVEw0kA8GLc0MEM55RJC0wGKBcT30PGYrW4M0hhh0=";
+          };
+          nativeBuildInputs = [
+            self.flit-core
+            self.poetry-core
+          ];
+          propagatedBuildInputs = [
+            self.cattrs
+            self.attrs
+          ];
+          doCheck = false;
         };
-        nativeBuildInputs = [ self.flit-core self.poetry-core ];
-        propagatedBuildInputs = [
-          self.cattrs
-          self.attrs
-        ];
-        doCheck = false;
-      };
-      pygls = self.buildPythonPackage rec {
-        pname = "pygls";
-        version = "1.3.1";
-        format = "pyproject";
-        src = self.fetchPypi {
-          inherit pname version;
-          hash = "sha256-FA7c7voNoOmzxTNUfIkqQqfS/ZIXroSMMwxT0malUBg=";
+        pygls = self.buildPythonPackage rec {
+          pname = "pygls";
+          version = "1.3.1";
+          format = "pyproject";
+          src = self.fetchPypi {
+            inherit pname version;
+            hash = "sha256-FA7c7voNoOmzxTNUfIkqQqfS/ZIXroSMMwxT0malUBg=";
+          };
+          nativeBuildInputs = [
+            self.poetry-core
+            self.setuptools
+            self.setuptools-scm
+          ];
+          propagatedBuildInputs = [
+            self.cattrs
+            self.lsprotocol
+          ];
+          doCheck = false;
         };
-        nativeBuildInputs = [ self.poetry-core self.setuptools self.setuptools-scm ];
-        propagatedBuildInputs = [
-          self.cattrs
-          self.lsprotocol
-        ];
-        doCheck = false;
+        jedi = super.jedi.overridePythonAttrs { doCheck = false; };
+        poetry-core = super.poetry-core.overridePythonAttrs { doCheck = false; };
+        cattrs = super.cattrs.overridePythonAttrs { doCheck = false; };
       };
-      jedi = super.jedi.overridePythonAttrs { doCheck = false; };
-      poetry-core = super.poetry-core.overridePythonAttrs { doCheck = false; };
-      cattrs = super.cattrs.overridePythonAttrs { doCheck = false; };
-    };
-  }).pkgs;
+    }).pkgs;
 
 in
 {

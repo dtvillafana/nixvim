@@ -18,6 +18,7 @@
     ./grugfar.nix
     ./indent-blankline.nix
     ./keymaps.nix
+    ./lazygit.nix
     ./lsp.nix
     ./lualine.nix
     ./neovide.nix

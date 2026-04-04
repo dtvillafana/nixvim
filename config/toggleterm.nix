@@ -223,15 +223,6 @@
     }
     {
       mode = "n";
-      key = "<leader>tl";
-      action = "<CMD>lua local current_buf = vim.api.nvim_get_current_buf(); local filepath = vim.api.nvim_buf_get_name(current_buf); local directory = vim.fn.fnamemodify(filepath, ':h'); require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit', hidden = true, close_on_exit = true, direction = 'float', dir = directory, display_name = 'lazygit', }):toggle()<CR>";
-      options = {
-        noremap = true;
-        silent = true;
-      };
-    }
-    {
-      mode = "n";
       key = "<leader>tb";
       action = "<CMD>lua require('toggleterm.terminal').Terminal:new({ cmd = 'btop', hidden = true, close_on_exit = true, direction = 'float', display_name = 'btop' }):toggle()<CR>";
       options = {

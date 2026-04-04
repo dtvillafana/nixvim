@@ -41,7 +41,7 @@
                 imagemagick
                 lazygit
                 nix-direnv
-                nixfmt
+                nixfmt-tree
                 ripgrep
                 xclip
               ];
