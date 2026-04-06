@@ -246,7 +246,7 @@ else
           owner = "nvim-orgmode";
           repo = "org-bullets.nvim";
           rev = "main";
-          hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
+          hash = "sha256-Tgeqr/Zd1hJXXaln4XWGS5aZqypnpfNxgO/+pQVk7jg=";
         };
         doCheck = false;
       })
@@ -276,7 +276,7 @@ else
           owner = "nvim-orgmode";
           repo = "telescope-orgmode.nvim";
           rev = "master";
-          hash = "sha256-UaK+ct04Y4lNEZ93NzCkgzQYbpAeTnpbGEZ8wZiAxtM=";
+          hash = "sha256-LXz6+9F9PAp2qNtRywxtdQSxO/lMcUHjwS4SASRTSVQ=";
         };
         doCheck = false;
       })
