@@ -66,7 +66,7 @@ else
             owner = "dtvillafana";
             repo = "orgmode";
             rev = "personal";
-            hash = "sha256-YTIS/RTtBLetdwU7b38Nd6ABqcnTZVuPvFhr/C4ecnc=";
+            hash = "sha256-/SH8FYBGdIOwOhJHN4dcA2jNaTygCsHFSwAASwYLWHY=";
           };
           doCheck = false;
           postPatch = ''

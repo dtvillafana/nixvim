@@ -1,6 +1,7 @@
 {
   # Import all your configuration modules here
   imports = [
+    ./ai.nix
     ./autopairs.nix
     ./bufdelete.nix
     ./bufferline.nix
