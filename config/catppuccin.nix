@@ -2,7 +2,7 @@
   colorschemes.catppuccin = {
     enable = true;
     settings = {
-      flavour = "frappe"; # latte, frappe, macchiato, mocha
+      flavour = "auto"; # latte, frappe, macchiato, mocha
       background = {
         # :h background
         light = "latte";

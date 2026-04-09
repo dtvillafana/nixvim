@@ -5,6 +5,17 @@
       enable = true;
       settings = {
         command = lib.getExe pkgs.claude-code;
+        keymaps = {
+          toggle = {
+            normal = "<leader>,";
+            terminal = "<leader>,";
+            variants = {
+              continue = "<leader>cC";
+            };
+          };
+          window_navigation = true;
+          scrolling = true;
+        };
       };
     };
     opencode = {
@@ -28,7 +39,7 @@
         "n"
         "x"
       ];
-      key = "<C-a>";
+      key = "<leader>aa";
       action.__raw = ''function() require("opencode").ask("@this: ", { submit = true }) end'';
       options.desc = "Ask opencode…";
     }
@@ -37,7 +48,7 @@
         "n"
         "x"
       ];
-      key = "<C-x>";
+      key = "<leader>ax";
       action.__raw = ''function() require("opencode").select() end'';
       options.desc = "Execute opencode action…";
     }
@@ -46,7 +57,7 @@
         "n"
         "t"
       ];
-      key = "<C-.>";
+      key = "<leader>.";
       action.__raw = ''function() require("opencode").toggle() end'';
       options.desc = "Toggle opencode";
     }
@@ -82,24 +93,6 @@
       key = "<S-C-d>";
       action.__raw = ''function() require("opencode").command("session.half.page.down") end'';
       options.desc = "Scroll opencode down";
-    }
-    {
-      mode = "n";
-      key = "+";
-      action = "<C-a>";
-      options = {
-        desc = "Increment under cursor";
-        noremap = true;
-      };
-    }
-    {
-      mode = "n";
-      key = "-";
-      action = "<C-x>";
-      options = {
-        desc = "Decrement under cursor";
-        noremap = true;
-      };
     }
   ];
 }
