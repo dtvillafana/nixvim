@@ -434,7 +434,7 @@ in
     direnv = {
       enable = true;
       settings = {
-        direnv_silent_reload = 0;
+        direnv_silent_reload = 1;
       };
     };
   };
