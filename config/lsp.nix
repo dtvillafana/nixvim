@@ -433,9 +433,6 @@ in
     };
     direnv = {
       enable = true;
-      settings = {
-        direnv_silent_reload = 1;
-      };
     };
   };
   filetype = {

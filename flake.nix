@@ -46,7 +46,6 @@
                 ansible-lint
                 btop
                 diff-so-fancy
-                direnv
                 emacs
                 fd
                 ghostscript_headless
