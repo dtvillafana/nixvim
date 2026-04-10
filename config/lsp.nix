@@ -81,7 +81,7 @@ in
       {
         mode = "n";
         key = "<leader>lx";
-        action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; local clients = vim.lsp.get_clients({name = 'ty'}); for _, client in ipairs(clients) do vim.lsp.stop_client(client.id) end; vim.defer_fn(function() vim.lsp.start({name = 'ty', cmd = {'ty', 'server'}, settings = { ty = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off', }, }, }, root_markers = {'.git', 'pyproject.toml', 'setup.py'}}) end, 100)<CR>";
+        action = "<CMD>lua vim.g.type_checking = not vim.g.type_checking; local clients = vim.lsp.get_clients({name = 'ty'}); for _, client in ipairs(clients) do client:stop() end; vim.defer_fn(function() vim.lsp.start({name = 'ty', cmd = {'ty', 'server'}, settings = { ty = { analysis = { typeCheckingMode = vim.g.type_checking and 'on' or 'off', }, }, }, root_markers = {'.git', 'pyproject.toml', 'setup.py'}}) end, 100)<CR>";
       }
     ];
     servers = {
@@ -374,7 +374,7 @@ in
             local client_names = {}
             for _, client in ipairs(clients) do
                 table.insert(client_names, client.name)
-                vim.lsp.stop_client(client.id)
+                client:stop()
             end
 
             local filepath = vim.api.nvim_buf_get_name(cur_buf)
