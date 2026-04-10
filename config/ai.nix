@@ -7,10 +7,10 @@
         command = lib.getExe pkgs.claude-code;
         keymaps = {
           toggle = {
-            normal = "<leader>,";
-            terminal = "<leader>,";
+            normal = "<leader>a,";
+            terminal = "<leader>a,";
             variants = {
-              continue = "<leader>cC";
+              continue = "<leader>ac";
             };
           };
           window_navigation = true;
@@ -57,7 +57,7 @@
         "n"
         "t"
       ];
-      key = "<leader>.";
+      key = "<leader>a.";
       action.__raw = ''function() require("opencode").toggle() end'';
       options.desc = "Toggle opencode";
     }
