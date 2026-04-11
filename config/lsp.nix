@@ -55,6 +55,9 @@ let
 
 in
 {
+  globals = {
+    direnv_silent_load = 1;
+  };
   extraConfigLuaPost = ''
     local severity = vim.diagnostic.severity
     vim.diagnostic.config({
@@ -433,6 +436,9 @@ in
     };
     direnv = {
       enable = true;
+      settings = {
+        direnv_silent_load = 1;
+      };
     };
   };
   filetype = {
