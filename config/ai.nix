@@ -23,7 +23,7 @@
       settings = {
         server.start = lib.nixvim.mkRaw ''
           function()
-            require("opencode.terminal").open("${lib.getExe pkgs.opencode} --port", {
+            require("opencode.terminal").open("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
               split = "right",
               width = math.floor(vim.o.columns * 0.35),
             })
