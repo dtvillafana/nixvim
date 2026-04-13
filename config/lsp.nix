@@ -220,11 +220,8 @@ in
             "htmlangular"
             "htmldjango"
             "jade"
-            "javascript"
-            "javascriptreact"
             "leaf"
             "liquid"
-            "markdown"
             "mdx"
             "mustache"
             "njk"
@@ -236,10 +233,6 @@ in
             "slim"
             "svelte"
             "templ"
-            "twig"
-            "typescript"
-            "typescriptreact"
-            "vue"
           ];
         };
       };
