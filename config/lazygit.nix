@@ -34,7 +34,7 @@ in
     {
       mode = "n";
       key = "<leader>tl";
-      action = "<CMD>LazyGit<CR>";
+      action = "<CMD>LazyGitCurrentFile<CR>";
       options = {
         noremap = true;
         silent = true;
