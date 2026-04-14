@@ -21,14 +21,24 @@
     opencode = {
       enable = true;
       settings = {
-        server.start = lib.nixvim.mkRaw ''
-          function()
-            require("opencode.terminal").open("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
-              split = "right",
-              width = math.floor(vim.o.columns * 0.35),
-            })
-          end
-        '';
+        server = {
+          start = lib.nixvim.mkRaw ''
+            function()
+              require("opencode.terminal").open("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
+                split = "below",
+                height = math.floor(vim.o.lines * 0.3),
+              })
+            end
+          '';
+          toggle = lib.nixvim.mkRaw ''
+            function()
+              require("opencode.terminal").toggle("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
+                split = "below",
+                height = math.floor(vim.o.lines * 0.3),
+              })
+            end
+          '';
+        };
       };
     };
   };
