@@ -72,11 +72,12 @@
 
         -- Resolve relative paths
         local full_path = path
-        if vim.fn.filereadable(path) == 0 then
+        if vim.fn.filereadable(path) == 0 and vim.fn.isdirectory(path) == 0 then
             full_path = file_dir .. '/' .. path
         end
 
-        if vim.fn.filereadable(full_path) == 0 then
+        local is_dir = vim.fn.isdirectory(full_path) == 1
+        if not is_dir and vim.fn.filereadable(full_path) == 0 then
             print(path .. " is not a valid path")
             return
         end
@@ -95,11 +96,15 @@
             return
         end
 
-        -- Focus the picked window, open file, and jump to line
+        -- Focus the picked window and open the path
         vim.api.nvim_set_current_win(picked_win)
-        vim.cmd('edit ' .. vim.fn.fnameescape(full_path))
-        if line_num then
-            vim.api.nvim_win_set_cursor(picked_win, {line_num, 0})
+        if is_dir then
+            require('oil').open(full_path)
+        else
+            vim.cmd('edit ' .. vim.fn.fnameescape(full_path))
+            if line_num then
+                vim.api.nvim_win_set_cursor(picked_win, {line_num, 0})
+            end
         end
     end
   '';

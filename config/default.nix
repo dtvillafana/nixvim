@@ -38,6 +38,7 @@
     ./snacks.nix
     ./surround.nix
     ./telescope.nix
+    ./tmux.nix
     ./todo-comments.nix
     ./toggleterm.nix
     ./treesitter.nix
