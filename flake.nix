@@ -3,10 +3,7 @@
 
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*";
-    claude-code = {
-      url = "github:sadjow/claude-code-nix";
-    };
-    opencode-tui.url = "github:anomalyco/opencode";
+    llm-agents.url = "github:numtide/llm-agents.nix";
     nixvim = {
       url = "github:dtvillafana/nixvim-for-pr";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,8 +28,8 @@
             inherit system;
             overlays = [
               (final: prev: {
-                claude-code = inputs.claude-code.packages.${system}.claude-code;
-                opencode = inputs.opencode-tui.packages.${system}.opencode;
+                claude-code = inputs.llm-agents.packages.${system}.claude-code;
+                opencode = inputs.llm-agents.packages.${system}.opencode;
               })
             ];
           };
