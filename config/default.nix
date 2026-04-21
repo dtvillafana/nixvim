@@ -30,6 +30,7 @@
     ./options.nix
     ./org.nix
     ./presenting.nix
+    ./quickmath.nix
     ./rainbow-csv.nix
     ./rainbow-delimiters.nix
     ./render-markdown.nix
