@@ -2,13 +2,13 @@
 let
   treesitter-poweron = pkgs.tree-sitter.buildGrammar {
     language = "poweron";
-    version = "0.0.1+rev=main";
+    version = "0.0.1";
     generate = true;
     src = pkgs.fetchFromGitHub {
       owner = "dtvillafana";
       repo = "tree-sitter-poweron";
       rev = "main";
-      hash = "sha256-/1UDCdqbv9vjBbnj+hSKhfcTm93N67cDV3wwpHEZKTY=";
+      hash = "sha256-AWO0BmfrKQ7Cob6nwiCl0eOH3jELrlD5yJlZ/6nHMSo=";
     };
     meta.homepage = "https://github.com/dtvillafana/tree-sitter-poweron";
   };
