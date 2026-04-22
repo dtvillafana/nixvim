@@ -118,7 +118,12 @@ in
     {
       mode = "n";
       key = "<leader>w";
-      action = "<CMD>update<CR>";
+      action.__raw = ''
+        function()
+            vim.cmd('update')
+            vim.notify('File saved!', vim.log.levels.INFO)
+            end
+      '';
       options = {
         noremap = true;
         silent = true;

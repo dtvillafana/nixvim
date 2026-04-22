@@ -45,7 +45,7 @@
     updatetime = 300; # faster completion (4000ms default)
     wrap = true; # wrap lines that are too long to display on the screen
     writebackup = false; # if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
-    guifont = "DejaVu Sans Mono:h11"; # the font used in graphical neovim applications
+    guifont = "Courier New:h12"; # the font used in graphical neovim applications
     maxmempattern = 2000000;
     list = true;
     listchars = "tab:>-,space:·,eol:";
