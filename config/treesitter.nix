@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   treesitter-poweron = pkgs.tree-sitter.buildGrammar {
     language = "poweron";
@@ -23,19 +23,6 @@ in
       settings = {
         highlight = {
           enable = true;
-          disable = ''
-            function(lang, buf)
-                -- Disable highlighting for CSV-related file types
-                if lang == "csv" or lang == "tsv" or lang == "bsv" or lang == "csv_pipe" or lang == "csv_whitespace" or lang == "csv_semicolon" then
-                    return true
-                end
-
-                local max_filesize = 1000 * 1024
-                local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                if ok and stats and stats.size > max_filesize then
-                    return true
-                end
-            end'';
         };
         incremental_selection = {
           enable = true;
