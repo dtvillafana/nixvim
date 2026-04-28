@@ -7,7 +7,7 @@
         owner = "dtvillafana";
         repo = "rainbow_csv.nvim";
         rev = "master";
-        hash = "sha256-F+ar0cNzUkJM+HRUB5GRz/GPc0THMH8wRzV+F39F/4s=";
+        hash = "sha256-ckX3MZjedDNEDVld4tQTtrAmiujUQHwUajejI5Z+5/0=";
       };
     })
   ];
