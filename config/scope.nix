@@ -2,7 +2,7 @@
 {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (pkgs.lib.getName pkg) [
-      "scope.nvim"
+      "vimplugin-scope.nvim"
     ];
 
   plugins = {
