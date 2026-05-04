@@ -26,6 +26,7 @@
         let
           pkgs = import inputs.nixpkgs {
             inherit system;
+            config.allowUnfree = true;
             overlays = [
               (final: prev: {
                 claude-code = inputs.llm-agents.packages.${system}.claude-code;
