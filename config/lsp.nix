@@ -80,6 +80,11 @@ in
         lspBufAction = "hover";
         mode = "n";
       }
+      {
+        key = "<leader>lde";
+        action = "<CMD> lua vim.diagnostic.open_float()<Enter>";
+        mode = "n";
+      }
       # Python server specific
       {
         mode = "n";
