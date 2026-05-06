@@ -13,6 +13,8 @@ let
     exec ${lib.getExe pkgs.diff-so-fancy} "$@"
   '';
   lazygitConfig = pkgs.writeText "lazygit-config.yml" ''
+    os:
+      editPreset: nvim
     git:
       pagers:
         - pager:  ${diffSoFancyWrapper}

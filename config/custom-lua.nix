@@ -9,6 +9,17 @@
             -- Use `wslview` (or a similar tool) to open links in the Windows browser
             vim.fn.system({ "wslview", uri })
         end
+
+        -- Open a toggleterm float terminal with PowerShell
+        vim.keymap.set("n", "<leader>to", function()
+            local Terminal = require("toggleterm.terminal").Terminal
+            local powershell = Terminal:new({
+                cmd = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+                direction = "float",
+                hidden = true,
+            })
+            powershell:toggle()
+        end, { desc = "Open PowerShell float terminal" })
     end
   '';
 }
