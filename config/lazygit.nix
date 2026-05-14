@@ -16,6 +16,8 @@ let
     os:
       editPreset: nvim
     git:
+      fetch:
+        prune: true
       pagers:
         - pager:  ${diffSoFancyWrapper}
           colorArg: always
