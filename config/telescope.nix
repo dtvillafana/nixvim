@@ -111,6 +111,7 @@
         end
       '';
       enabledExtensions = [
+        "aerial"
       ];
     };
   };

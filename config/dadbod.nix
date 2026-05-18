@@ -34,6 +34,11 @@
                 return 'sqlite://' .. var .. '/Sync/datasets/politics.db'
             end,
 
+            env_var = os.getenv('FICS'),
+            key = 'fics',
+            value_func = function(var)
+                return '://' .. var .. '/Sync/datasets/fics.db'
+            end,
         },
     }
 

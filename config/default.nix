@@ -1,6 +1,7 @@
 {
   # Import all your configuration modules here
   imports = [
+    ./aerial.nix
     ./ai.nix
     ./autopairs.nix
     ./bufdelete.nix
