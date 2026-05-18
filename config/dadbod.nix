@@ -28,18 +28,12 @@
     end
     local env_vars = {
         {
-            env_var = os.getenv('HOME'),
             key = 'politics',
             value_func = function(var)
                 return 'sqlite://' .. var .. '/Sync/datasets/politics.db'
             end,
 
-            env_var = os.getenv('FICS'),
-            key = 'fics',
-            value_func = function(var)
-                return '://' .. var .. '/Sync/datasets/fics.db'
-            end,
-        },
+         },
     }
 
     for _, item in ipairs(env_vars) do
