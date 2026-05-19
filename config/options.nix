@@ -14,8 +14,10 @@
     fileencoding = "utf-8"; # the encoding written to a file
     foldcolumn = "0"; # "0" is not bad
     foldenable = true;
-    foldlevel = 99; # Using ufo provider need a large value, feel free to decrease the value
+    foldlevel = 99;
     foldlevelstart = 99;
+    foldmethod = "expr";
+    foldexpr = "v:lua.vim.treesitter.foldexpr()";
     hlsearch = true; # highlight all matches on previous search pattern
     ignorecase = true; # ignore case in search patterns
     laststatus = 3;

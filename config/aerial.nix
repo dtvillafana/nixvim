@@ -34,17 +34,15 @@
         auto_unfold_min_lines = 20;
       };
     };
-    keymaps = {
-      "<leader>a" = "AerialToggle!";
-      "{" = "AerialPrev";
-      "}" = "AerialNext";
-      "[[" = "AerialPrevUp";
-      "]]" = "AerialNextUp";
-    };
   };
 
-  # Telescope integration — opens an aerial symbol picker
   keymaps = [
+    { mode = "n"; key = "<leader>a"; action = "<cmd>AerialToggle!<cr>"; options = { desc = "Aerial toggle"; noremap = true; silent = true; }; }
+    { mode = "n"; key = "{"; action = "<cmd>AerialPrev<cr>"; options = { noremap = true; silent = true; }; }
+    { mode = "n"; key = "}"; action = "<cmd>AerialNext<cr>"; options = { noremap = true; silent = true; }; }
+    { mode = "n"; key = "[["; action = "<cmd>AerialPrevUp<cr>"; options = { noremap = true; silent = true; }; }
+    { mode = "n"; key = "]]"; action = "<cmd>AerialNextUp<cr>"; options = { noremap = true; silent = true; }; }
+    # Telescope integration — opens an aerial symbol picker
     {
       mode = "n";
       key = "<leader>fa";

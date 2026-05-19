@@ -1,5 +1,17 @@
 {
   extraConfigLua = ''
+    -- Refresh treesitter folds after buffer load (parser attaches asynchronously)
+    vim.api.nvim_create_autocmd("BufReadPost", {
+      callback = function(args)
+        vim.schedule(function()
+          local ok = pcall(vim.treesitter.get_parser, args.buf)
+          if ok then
+            vim.cmd("normal! zx")
+          end
+        end)
+      end,
+    })
+
     -- Detect if we're running in WSL
     local is_wsl = vim.loop.os_uname().release:match("microsoft")
 
