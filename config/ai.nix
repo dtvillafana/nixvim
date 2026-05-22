@@ -5,6 +5,9 @@
       enable = true;
       settings = {
         command = lib.getExe pkgs.claude-code;
+        refresh = {
+          show_notifications = false;
+        };
         keymaps = {
           toggle = {
             normal = "<leader>a,";
