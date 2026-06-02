@@ -1,9 +1,21 @@
 {
   extraConfigLua = ''
+
     -- Detect if we're running in WSL
     local is_wsl = vim.loop.os_uname().release:match("microsoft")
 
     if is_wsl then
+        vim.g.clipboard = {
+          name = 'OSC 52',
+          copy = {
+            ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+            ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+          },
+          paste = {
+            ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+            ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+          },
+        }
         -- Override `vim.ui.open` to simulate Windows behavior
         vim.ui.open = function(uri)
             -- Use `wslview` (or a similar tool) to open links in the Windows browser
