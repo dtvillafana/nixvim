@@ -60,8 +60,8 @@
             extraSpecialArgs = {
               system = system;
               pkgs = pkgs;
-              orgPath = "/home/vir/git-repos/orgfiles/";
-              omenPath = "/home/vir/.local/share/gopass/stores/root/";
+              orgPath = "~/git-repos/orgfiles/";
+              omenPath = "~/.local/share/gopass/stores/root/";
             };
           };
           nvim = nixvim'.makeNixvimWithModule nixvimModule;
