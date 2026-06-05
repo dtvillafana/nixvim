@@ -2,6 +2,7 @@
   plugins = {
     lualine = {
       enable = true;
+      lazyLoad.enable = false;
       luaConfig.post = ''
         local status_ok, lualine = pcall(require, 'lualine')
         if not status_ok then
@@ -34,6 +35,8 @@
                 return gitdir and #gitdir > 0 and #gitdir < #filepath
             end,
         }
+
+        vim.opt.laststatus = 3
 
         -- Config
         local config = {
