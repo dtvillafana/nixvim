@@ -2,7 +2,7 @@
   description = "David's Nixvim config";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2605.0";
     llm-agents.url = "github:numtide/llm-agents.nix";
     nixvim = {
       url = "github:dtvillafana/nixvim-for-pr";
