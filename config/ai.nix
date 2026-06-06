@@ -27,18 +27,46 @@
         server = {
           start = lib.nixvim.mkRaw ''
             function()
-              require("opencode.terminal").open("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
-                split = "below",
-                height = math.floor(vim.o.lines * 0.3),
-              })
+              local function opencode_cmd(callback)
+                local tcp = vim.uv.new_tcp()
+                tcp:connect("127.0.0.1", 4096, function(err)
+                  tcp:close()
+                  vim.schedule(function()
+                    callback(err == nil
+                      and "${lib.getExe pkgs.opencode} attach http://localhost:4096"
+                      or "${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0")
+                  end)
+                end)
+              end
+
+              opencode_cmd(function(cmd)
+                require("opencode.terminal").open(cmd, {
+                  split = "below",
+                  height = math.floor(vim.o.lines * 0.3),
+                })
+              end)
             end
           '';
           toggle = lib.nixvim.mkRaw ''
             function()
-              require("opencode.terminal").toggle("${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0", {
-                split = "below",
-                height = math.floor(vim.o.lines * 0.3),
-              })
+              local function opencode_cmd(callback)
+                local tcp = vim.uv.new_tcp()
+                tcp:connect("127.0.0.1", 4096, function(err)
+                  tcp:close()
+                  vim.schedule(function()
+                    callback(err == nil
+                      and "${lib.getExe pkgs.opencode} attach http://localhost:4096"
+                      or "${lib.getExe pkgs.opencode} --port 4096 --hostname 0.0.0.0")
+                  end)
+                end)
+              end
+
+              opencode_cmd(function(cmd)
+                require("opencode.terminal").toggle(cmd, {
+                  split = "below",
+                  height = math.floor(vim.o.lines * 0.3),
+                })
+              end)
             end
           '';
         };

@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   plugins = {
     vim-dadbod = {
@@ -11,6 +11,7 @@
       enable = true;
     };
   };
+  extraPackages = [ pkgs.sqlite ];
   extraConfigLua = ''
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_show_database_icon = 1
