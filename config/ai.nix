@@ -1,8 +1,72 @@
 { lib, pkgs, ... }:
 let
-  curl = lib.getExe pkgs.curl;
   opencode = lib.getExe pkgs.opencode;
   opencodeCmd = ''
+    local function opencode_http_request(method, path, body, callback)
+      local tcp = vim.uv.new_tcp()
+      if not tcp then
+        callback("Failed to create TCP handle")
+        return
+      end
+
+      local done = false
+      local chunks = {}
+
+      local function finish(err, response)
+        if done then
+          return
+        end
+        done = true
+        pcall(tcp.read_stop, tcp)
+        if not tcp:is_closing() then
+          tcp:close()
+        end
+        callback(err, response)
+      end
+
+      tcp:connect("127.0.0.1", 4096, function(err)
+        if err then
+          finish(err)
+          return
+        end
+
+        local payload = body and vim.json.encode(body) or ""
+        local request = table.concat({
+          method .. " " .. path .. " HTTP/1.1",
+          "Host: localhost:4096",
+          "Content-Type: application/json",
+          "Accept: application/json",
+          "Content-Length: " .. #payload,
+          "Connection: close",
+          "",
+          payload,
+        }, "\r\n")
+
+        tcp:read_start(function(read_err, data)
+          if read_err then
+            finish(read_err)
+          elseif data then
+            table.insert(chunks, data)
+          else
+            local raw = table.concat(chunks)
+            local header, response = raw:match("^(.-)\r\n\r\n(.*)$")
+            local status = header and tonumber(header:match("^HTTP/%d%.%d%s+(%d+)"))
+            if not status or status < 200 or status >= 300 then
+              finish("opencode request failed with status " .. tostring(status), response)
+            else
+              finish(nil, response)
+            end
+          end
+        end)
+
+        tcp:write(request, function(write_err)
+          if write_err then
+            finish(write_err)
+          end
+        end)
+      end)
+    end
+
     local function project_root()
       local cwd = vim.uv.cwd()
       local markers = {
@@ -55,7 +119,7 @@ let
     end
 
     local function start_cmd(root)
-      return "${opencode} " .. shellescape(root)
+      return "${opencode} --port " .. shellescape(root)
     end
 
     local function attach_cmd(session, root)
@@ -79,10 +143,10 @@ let
     end
 
     local function session_cmd(root, callback)
-      vim.system({ "${curl}", "-fsS", "http://localhost:4096/session" }, { text = true }, function(result)
+      opencode_http_request("GET", "/session", nil, function(err, response)
         local cmd = start_cmd(root)
-        if result.code == 0 then
-          local ok, sessions = pcall(vim.json.decode, result.stdout)
+        if not err then
+          local ok, sessions = pcall(vim.json.decode, response)
           if ok and type(sessions) == "table" then
             local session = latest_matching_session(sessions, root)
             if session then
@@ -167,6 +231,129 @@ in
       };
     };
   };
+
+  extraConfigLua = ''
+    local function opencode_http_request(method, path, body, callback)
+      local tcp = vim.uv.new_tcp()
+      if not tcp then
+        callback("Failed to create TCP handle")
+        return
+      end
+
+      local done = false
+      local chunks = {}
+
+      local function finish(err, response)
+        if done then
+          return
+        end
+        done = true
+        pcall(tcp.read_stop, tcp)
+        if not tcp:is_closing() then
+          tcp:close()
+        end
+        callback(err, response)
+      end
+
+      tcp:connect("127.0.0.1", 4096, function(err)
+        if err then
+          finish(err)
+          return
+        end
+
+        local payload = body and vim.json.encode(body) or ""
+        local request = table.concat({
+          method .. " " .. path .. " HTTP/1.1",
+          "Host: localhost:4096",
+          "Content-Type: application/json",
+          "Accept: application/json",
+          "Content-Length: " .. #payload,
+          "Connection: close",
+          "",
+          payload,
+        }, "\r\n")
+
+        tcp:read_start(function(read_err, data)
+          if read_err then
+            finish(read_err)
+          elseif data then
+            table.insert(chunks, data)
+          else
+            local raw = table.concat(chunks)
+            local header, response = raw:match("^(.-)\r\n\r\n(.*)$")
+            local status = header and tonumber(header:match("^HTTP/%d%.%d%s+(%d+)"))
+            if not status or status < 200 or status >= 300 then
+              finish("opencode request failed with status " .. tostring(status), response)
+            else
+              finish(nil, response)
+            end
+          end
+        end)
+
+        tcp:write(request, function(write_err)
+          if write_err then
+            finish(write_err)
+          end
+        end)
+      end)
+    end
+
+    local function send_opencode_tui_command(command)
+      opencode_http_request(
+        "POST",
+        "/tui/publish",
+        {
+          type = "tui.command.execute",
+          properties = { command = command },
+        },
+        function(err)
+          if not err then
+            return
+          end
+          vim.schedule(function()
+            vim.notify("Failed to send opencode command: " .. err, vim.log.levels.ERROR)
+          end)
+        end
+      )
+    end
+
+    vim.api.nvim_create_autocmd("TermOpen", {
+      callback = function(event)
+        local name = vim.api.nvim_buf_get_name(event.buf)
+        if not name:match("opencode") then
+          return
+        end
+
+        local opts = { buffer = event.buf }
+        vim.keymap.set("n", "<C-u>", function()
+          send_opencode_tui_command("session.half.page.up")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
+        vim.keymap.set("n", "<C-d>", function()
+          send_opencode_tui_command("session.half.page.down")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+        vim.keymap.set("t", "<C-u>", function()
+          send_opencode_tui_command("session.half.page.up")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
+        vim.keymap.set("t", "<C-d>", function()
+          send_opencode_tui_command("session.half.page.down")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+
+        -- Some terminals can distinguish shifted Ctrl keys; most collapse them to <C-u>/<C-d>.
+        vim.keymap.set("n", "<S-C-u>", function()
+          send_opencode_tui_command("session.half.page.up")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
+        vim.keymap.set("n", "<S-C-d>", function()
+          send_opencode_tui_command("session.half.page.down")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+        vim.keymap.set("t", "<S-C-u>", function()
+          send_opencode_tui_command("session.half.page.up")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
+        vim.keymap.set("t", "<S-C-d>", function()
+          send_opencode_tui_command("session.half.page.down")
+        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+      end,
+    })
+  '';
 
   keymaps = [
     {
