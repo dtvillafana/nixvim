@@ -155,6 +155,17 @@ in
           };
         };
       };
+      rust_analyzer = {
+        enable = true;
+        config = {
+          cmd = [ "rust-analyzer" ];
+          filetypes = [ "rust" ];
+          root_markers = [
+            ".git"
+            "Cargo.toml"
+          ];
+        };
+      };
       djlsp = {
         enable = true;
         package = py.buildPythonPackage rec {
