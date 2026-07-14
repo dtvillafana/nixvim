@@ -7,7 +7,7 @@
         owner = "sotte";
         repo = "presenting.nvim";
         rev = "master";
-        hash = "sha256-Q/SNFkMSREVEeDiikdMXQCVxrt3iThQUh08YMcN9qSk=";
+        hash = "sha256-nAOKUW01KyC5kCP86s0KUsNPfb9wWngDNH3KWvKBwo8=";
       };
     })
   ];
