@@ -15,6 +15,7 @@
     ./dressing.nix
     ./flash.nix
     ./formatters.nix
+    ./fyler.nix
     ./gitsigns.nix
     ./grugfar.nix
     ./indent-blankline.nix
@@ -24,7 +25,6 @@
     ./lualine.nix
     ./neovide.nix
     ./noice.nix
-    ./nvimtree.nix
     ./oil.nix
     ./omen.nix
     ./options.nix

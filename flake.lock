@@ -93,6 +93,22 @@
         "type": "github"
       }
     },
+    "fyler": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784355194,
+        "narHash": "sha256-OSM7IYYGoVA+ft5t5rHo3k/9pqeony8C03gHqBpwfY0=",
+        "owner": "FylerOrg",
+        "repo": "fyler.nvim",
+        "rev": "60c75b81f93e5093ecc7a9e6d2aeea35291a5aa0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FylerOrg",
+        "repo": "fyler.nvim",
+        "type": "github"
+      }
+    },
     "llm-agents": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -185,6 +201,7 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
+        "fyler": "fyler",
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim"

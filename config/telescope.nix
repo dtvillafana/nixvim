@@ -16,7 +16,6 @@
     telescope = {
       enable = true;
       keymaps = {
-        "<leader>ff" = "find_files";
         "<leader>fg" = "live_grep";
         "<leader>fh" = "help_tags";
         "<leader>fs" = "lsp_document_symbols";
@@ -129,6 +128,15 @@
   };
   extraPlugins = [
     (pkgs.vimUtils.buildVimPlugin {
+      name = "fzf-oil.nvim";
+      src = pkgs.fetchFromGitHub {
+        owner = "ingur";
+        repo = "fzf-oil.nvim";
+        rev = "f49a44658c3ae6243b88b20db5767657d29dd5cc";
+        hash = "sha256-kOMh4gmfnK0drx8OxzMZDrjRyTUrDQiqMK+Vp2d1ZAs=";
+      };
+    })
+    (pkgs.vimUtils.buildVimPlugin {
       name = "nvim-neoclip";
       src = pkgs.fetchFromGitHub {
         owner = "AckslD";
@@ -140,6 +148,42 @@
     })
   ];
   extraConfigLua = ''
+    local fzf_oil_hidden = false
+    local fzf_oil
+    local fzf_oil_keys = {
+      parent = '-',
+      child = '<C-l>',
+      down = '<C-j>',
+      up = '<C-k>',
+      toggle_find = '<C-f>',
+      edit = '<C-e>',
+      home = '<C-g>',
+      back = '<C-o>',
+      quit = 'q',
+    }
+    fzf_oil = require('fzf-oil').setup({
+      cmd = 'fd --max-depth 3 --exclude .git --type f --type d --type l',
+      find_cmd = 'fd --exclude .git --type f --type l',
+      keys = fzf_oil_keys,
+      fzf_exec_opts = {
+        actions = {
+          ['alt-h'] = {
+            fn = function()
+              fzf_oil_hidden = not fzf_oil_hidden
+              local hidden = fzf_oil_hidden and ' --hidden' or ""
+              fzf_oil.cmd = 'fd --max-depth 1' .. hidden .. ' --exclude .git --type f --type d --type l'
+              fzf_oil.find_cmd = 'fd' .. hidden .. ' --exclude .git --type f --type l'
+            end,
+            reload = true,
+            postfix = 'clear-query',
+          },
+        },
+      },
+    })
+    vim.keymap.set('n', '<leader>ff', function()
+      fzf_oil.browse(nil, true)
+    end, { desc = 'Browse files recursively' })
+
     require('neoclip').setup({
       history = 1000,
       enable_persistent_history = false,

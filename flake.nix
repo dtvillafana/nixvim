@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2605.0";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    fyler = {
+      url = "github:FylerOrg/fyler.nvim";
+      flake = false;
+    };
     nixvim = {
       url = "github:dtvillafana/nixvim-for-pr";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,6 +65,7 @@
             extraSpecialArgs = {
               system = system;
               pkgs = pkgs;
+              fyler = inputs.fyler;
               orgPath = "~/git-repos/orgfiles/";
               omenPath = "~/.local/share/gopass/stores/root/";
             };
