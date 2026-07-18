@@ -1,6 +1,18 @@
 { pkgs, ... }:
 {
   plugins = {
+    fzf-lua = {
+      enable = true;
+      keymaps."<leader>fd" = {
+        action = "zoxide";
+        settings.actions.enter.__raw = ''
+          function(selected)
+            require('oil').open(selected[1]:match('[^\t]+$'))
+          end
+        '';
+        options.desc = "Find frecent directories";
+      };
+    };
     telescope = {
       enable = true;
       keymaps = {
@@ -99,16 +111,17 @@
                 end)
             end
 
-            telescope.setup({
-                defaults = {
-                    layout_strategy = GET_TELESCOPE_LAYOUT(),
+             telescope.setup({
+                 defaults = {
+                     layout_strategy = GET_TELESCOPE_LAYOUT(),
                     mappings = {
                         i = { ["<A-h>"] = toggle_rg_hidden },
                         n = { ["<A-h>"] = toggle_rg_hidden },
-                    },
-                }
-            })
-        end
+                     },
+                 }
+             })
+
+         end
       '';
       enabledExtensions = [
       ];

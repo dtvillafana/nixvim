@@ -54,6 +54,7 @@
                 nixfmt-tree
                 ripgrep
                 xclip
+                zoxide
               ];
             };
             # You can use `extraSpecialArgs` to pass additional arguments to your module files

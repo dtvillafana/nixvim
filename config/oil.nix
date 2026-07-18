@@ -6,6 +6,26 @@
         view_options.show_hidden = true;
         delete_to_trash = true;
         keymaps = {
+          "<CR>" = {
+            callback = {
+              __raw = ''
+                function()
+                  local oil = require('oil')
+                  local entry = oil.get_cursor_entry()
+
+                  if entry and entry.type == 'file' then
+                    local dir = oil.get_current_dir()
+                    if dir then
+                      vim.system({ 'zoxide', 'add', dir }, { detach = true })
+                    end
+                  end
+
+                  oil.select()
+                end
+              '';
+            };
+            desc = "oil: Select entry and record file directory";
+          };
           gs = {
             callback = {
               __raw = ''

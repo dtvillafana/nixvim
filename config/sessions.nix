@@ -27,6 +27,15 @@
         end,
         extensions = { scope = {} }, -- add scope.nvim extension
     })
+    resession.add_hook("post_load", function()
+        for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+            local tabnr = vim.api.nvim_tabpage_get_number(tabpage)
+            local dir = vim.fn.getcwd(-1, tabnr)
+            if dir ~= "" then
+                vim.system({ "zoxide", "add", dir }, { detach = true })
+            end
+        end
+    end)
     vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
             -- Always save a special session named "last"
