@@ -1,70 +1,48 @@
 { lib, pkgs, ... }:
 let
   opencode = lib.getExe pkgs.opencode;
-  opencodeCmd = ''
-    local function opencode_http_request(method, path, body, callback)
-      local tcp = vim.uv.new_tcp()
-      if not tcp then
-        callback("Failed to create TCP handle")
-        return
-      end
+in
+{
+  plugins = {
+    claude-code = {
+      enable = true;
+      settings = {
+        command = lib.getExe pkgs.claude-code;
+        refresh = {
+          show_notifications = false;
+        };
+        keymaps = {
+          toggle = {
+            normal = "<leader>a,";
+            terminal = "<leader>a,";
+            variants = {
+              continue = "<leader>ac";
+            };
+          };
+          window_navigation = true;
+          scrolling = true;
+        };
+      };
+    };
+    opencode = {
+      enable = true;
+      settings = {
+        server = {
+          start = lib.nixvim.mkRaw ''function() _G.__opencode_ai.start() end'';
+          toggle = lib.nixvim.mkRaw ''function() _G.__opencode_ai.toggle() end'';
+        };
+      };
+    };
+  };
 
-      local done = false
-      local chunks = {}
-
-      local function finish(err, response)
-        if done then
-          return
-        end
-        done = true
-        pcall(tcp.read_stop, tcp)
-        if not tcp:is_closing() then
-          tcp:close()
-        end
-        callback(err, response)
-      end
-
-      tcp:connect("127.0.0.1", 4096, function(err)
-        if err then
-          finish(err)
-          return
-        end
-
-        local payload = body and vim.json.encode(body) or ""
-        local request = table.concat({
-          method .. " " .. path .. " HTTP/1.1",
-          "Host: localhost:4096",
-          "Content-Type: application/json",
-          "Accept: application/json",
-          "Content-Length: " .. #payload,
-          "Connection: close",
-          "",
-          payload,
-        }, "\r\n")
-
-        tcp:read_start(function(read_err, data)
-          if read_err then
-            finish(read_err)
-          elseif data then
-            table.insert(chunks, data)
-          else
-            local raw = table.concat(chunks)
-            local header, response = raw:match("^(.-)\r\n\r\n(.*)$")
-            local status = header and tonumber(header:match("^HTTP/%d%.%d%s+(%d+)"))
-            if not status or status < 200 or status >= 300 then
-              finish("opencode request failed with status " .. tostring(status), response)
-            else
-              finish(nil, response)
-            end
-          end
-        end)
-
-        tcp:write(request, function(write_err)
-          if write_err then
-            finish(write_err)
-          end
-        end)
-      end)
+  extraConfigLua = ''
+    local function shellescape(value)
+      return '"' .. tostring(value)
+        :gsub("\\", "\\\\")
+        :gsub('"', '\\"')
+        :gsub("%$", "\\$")
+        :gsub("`", "\\`")
+        .. '"'
     end
 
     local function project_root()
@@ -109,131 +87,18 @@ let
       return vim.uv.fs_realpath(cwd) or cwd
     end
 
-    local function shellescape(value)
-      return '"' .. tostring(value)
-        :gsub("\\", "\\\\")
-        :gsub('"', '\\"')
-        :gsub("%$", "\\$")
-        :gsub("`", "\\`")
-        .. '"'
-    end
-
-    local function start_cmd(root)
-      return "${opencode} --port " .. shellescape(root)
-    end
-
-    local function attach_cmd(session, root)
-      return "${opencode} attach http://localhost:4096 --session "
-        .. shellescape(session.id)
-        .. " --dir "
-        .. shellescape(root)
-    end
-
-    local function latest_matching_session(sessions, root)
-      local match
-      for _, session in ipairs(sessions) do
-        local directory = session.directory and (vim.uv.fs_realpath(session.directory) or session.directory)
-        if directory == root and session.id then
-          if not match or (session.time and session.time.updated or 0) > (match.time and match.time.updated or 0) then
-            match = session
-          end
-        end
+    -- Deterministic per-project port so each project root gets its own
+    -- opencode server instead of every Neovim instance fighting over the
+    -- same hardcoded port.
+    local function project_port(root)
+      local hash = 5381
+      for i = 1, #root do
+        hash = (hash * 33 + root:byte(i)) % 1000000
       end
-      return match
+      return 20000 + (hash % 20000)
     end
 
-    local function session_cmd(root, callback)
-      opencode_http_request("GET", "/session", nil, function(err, response)
-        local cmd = start_cmd(root)
-        if not err then
-          local ok, sessions = pcall(vim.json.decode, response)
-          if ok and type(sessions) == "table" then
-            local session = latest_matching_session(sessions, root)
-            if session then
-              cmd = attach_cmd(session, root)
-            end
-          end
-        end
-
-        vim.schedule(function()
-          callback(cmd)
-        end)
-      end)
-    end
-
-    local function opencode_cmd(callback)
-      local root = project_root()
-      local tcp = vim.uv.new_tcp()
-      tcp:connect("127.0.0.1", 4096, function(err)
-        tcp:close()
-        if err == nil then
-          session_cmd(root, callback)
-        else
-          vim.schedule(function()
-            callback(start_cmd(root))
-          end)
-        end
-      end)
-    end
-  '';
-in
-{
-  plugins = {
-    claude-code = {
-      enable = true;
-      settings = {
-        command = lib.getExe pkgs.claude-code;
-        refresh = {
-          show_notifications = false;
-        };
-        keymaps = {
-          toggle = {
-            normal = "<leader>a,";
-            terminal = "<leader>a,";
-            variants = {
-              continue = "<leader>ac";
-            };
-          };
-          window_navigation = true;
-          scrolling = true;
-        };
-      };
-    };
-    opencode = {
-      enable = true;
-      settings = {
-        server = {
-          start = lib.nixvim.mkRaw ''
-            function()
-              ${opencodeCmd}
-
-              opencode_cmd(function(cmd)
-                require("opencode.terminal").open(cmd, {
-                  split = "below",
-                  height = math.floor(vim.o.lines * 0.3),
-                })
-              end)
-            end
-          '';
-          toggle = lib.nixvim.mkRaw ''
-            function()
-              ${opencodeCmd}
-
-              opencode_cmd(function(cmd)
-                require("opencode.terminal").toggle(cmd, {
-                  split = "below",
-                  height = math.floor(vim.o.lines * 0.3),
-                })
-              end)
-            end
-          '';
-        };
-      };
-    };
-  };
-
-  extraConfigLua = ''
-    local function opencode_http_request(method, path, body, callback)
+    local function opencode_http_request(port, method, path, body, callback)
       local tcp = vim.uv.new_tcp()
       if not tcp then
         callback("Failed to create TCP handle")
@@ -255,7 +120,7 @@ in
         callback(err, response)
       end
 
-      tcp:connect("127.0.0.1", 4096, function(err)
+      tcp:connect("127.0.0.1", port, function(err)
         if err then
           finish(err)
           return
@@ -264,7 +129,7 @@ in
         local payload = body and vim.json.encode(body) or ""
         local request = table.concat({
           method .. " " .. path .. " HTTP/1.1",
-          "Host: localhost:4096",
+          "Host: localhost:" .. port,
           "Content-Type: application/json",
           "Accept: application/json",
           "Content-Length: " .. #payload,
@@ -298,8 +163,154 @@ in
       end)
     end
 
-    local function send_opencode_tui_command(command)
+    local function start_cmd(root, port)
+      return "${opencode} " .. shellescape(root) .. " --port " .. port
+    end
+
+    local function attach_cmd(session, root, port)
+      return "${opencode} attach http://localhost:" .. port
+        .. " --session "
+        .. shellescape(session.id)
+        .. " --dir "
+        .. shellescape(root)
+    end
+
+    local function latest_matching_session(sessions, root)
+      local match
+      for _, session in ipairs(sessions) do
+        local directory = session.directory and (vim.uv.fs_realpath(session.directory) or session.directory)
+        if directory == root and session.id then
+          if not match or (session.time and session.time.updated or 0) > (match.time and match.time.updated or 0) then
+            match = session
+          end
+        end
+      end
+      return match
+    end
+
+    local function session_cmd(root, port, callback)
+      opencode_http_request(port, "GET", "/session", nil, function(err, response)
+        local cmd = start_cmd(root, port)
+        if not err then
+          local ok, sessions = pcall(vim.json.decode, response)
+          if ok and type(sessions) == "table" then
+            local session = latest_matching_session(sessions, root)
+            if session then
+              cmd = attach_cmd(session, root, port)
+            end
+          end
+        end
+
+        vim.schedule(function()
+          callback(cmd)
+        end)
+      end)
+    end
+
+    local function opencode_cmd(callback)
+      local root = project_root()
+      local port = project_port(root)
+      local tcp = vim.uv.new_tcp()
+      tcp:connect("127.0.0.1", port, function(err)
+        tcp:close()
+        if err == nil then
+          session_cmd(root, port, function(cmd)
+            callback(cmd, root, port)
+          end)
+        else
+          vim.schedule(function()
+            callback(start_cmd(root, port), root, port)
+          end)
+        end
+      end)
+    end
+
+    -- Per-project terminal state. Upstream `opencode.terminal` keeps a single
+    -- module-level bufnr/winid, so a second `open()`/`toggle()` call for a
+    -- different project root would just no-op or reuse the first project's
+    -- terminal. Tracking terminals per root lets multiple opencode instances
+    -- (one per project) run at once in the same Neovim session.
+    local opencode_terminals = {}
+
+    local function opencode_terminal_opts()
+      return {
+        split = "below",
+        height = math.floor(vim.o.lines * 0.3),
+      }
+    end
+
+    local function opencode_terminal_open(root, cmd)
+      local term = opencode_terminals[root]
+      if term and term.bufnr and vim.api.nvim_buf_is_valid(term.bufnr) then
+        return
+      end
+
+      local previous_win = vim.api.nvim_get_current_win()
+      local bufnr = vim.api.nvim_create_buf(false, false)
+      local winid = vim.api.nvim_open_win(bufnr, true, opencode_terminal_opts())
+      opencode_terminals[root] = { bufnr = bufnr, winid = winid }
+      vim.b[bufnr].opencode_root = root
+
+      vim.fn.jobstart(cmd, {
+        term = true,
+        on_exit = function()
+          local t = opencode_terminals[root]
+          if t then
+            if t.winid and vim.api.nvim_win_is_valid(t.winid) then
+              vim.api.nvim_win_close(t.winid, true)
+            end
+            if t.bufnr and vim.api.nvim_buf_is_valid(t.bufnr) then
+              vim.api.nvim_buf_delete(t.bufnr, { force = true })
+            end
+          end
+          opencode_terminals[root] = nil
+        end,
+      })
+
+      vim.api.nvim_set_current_win(previous_win)
+    end
+
+    local function opencode_terminal_toggle(root, cmd)
+      local term = opencode_terminals[root]
+      if term and term.winid and vim.api.nvim_win_is_valid(term.winid) then
+        vim.api.nvim_win_hide(term.winid)
+        term.winid = nil
+      elseif term and term.bufnr and vim.api.nvim_buf_is_valid(term.bufnr) then
+        local previous_win = vim.api.nvim_get_current_win()
+        term.winid = vim.api.nvim_open_win(term.bufnr, true, opencode_terminal_opts())
+        vim.api.nvim_set_current_win(previous_win)
+      else
+        opencode_terminal_open(root, cmd)
+      end
+    end
+
+    vim.api.nvim_create_autocmd("ExitPre", {
+      once = true,
+      callback = function()
+        for _, term in pairs(opencode_terminals) do
+          if term.bufnr and vim.api.nvim_buf_is_valid(term.bufnr) then
+            vim.api.nvim_buf_delete(term.bufnr, { force = true })
+          end
+        end
+      end,
+    })
+
+    _G.__opencode_ai = {
+      start = function()
+        opencode_cmd(function(cmd, root)
+          opencode_terminal_open(root, cmd)
+        end)
+      end,
+      toggle = function()
+        opencode_cmd(function(cmd, root)
+          opencode_terminal_toggle(root, cmd)
+        end)
+      end,
+    }
+
+    local function send_opencode_tui_command(port, command)
       opencode_http_request(
+        port,
         "POST",
         "/tui/publish",
         {
@@ -319,38 +330,45 @@ in
 
     vim.api.nvim_create_autocmd("TermOpen", {
       callback = function(event)
-        local name = vim.api.nvim_buf_get_name(event.buf)
-        if not name:match("opencode") then
+        local root = vim.b[event.buf].opencode_root
+        if not root then
           return
+        end
+        local port = project_port(root)
+
+        local function scroll(direction)
+          return function()
+            send_opencode_tui_command(port, direction)
+          end
         end
 
         local opts = { buffer = event.buf }
-        vim.keymap.set("n", "<C-u>", function()
-          send_opencode_tui_command("session.half.page.up")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
-        vim.keymap.set("n", "<C-d>", function()
-          send_opencode_tui_command("session.half.page.down")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
-        vim.keymap.set("t", "<C-u>", function()
-          send_opencode_tui_command("session.half.page.up")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
-        vim.keymap.set("t", "<C-d>", function()
-          send_opencode_tui_command("session.half.page.down")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+        vim.keymap.set(
+          { "n", "t" },
+          "<C-u>",
+          scroll("session.half.page.up"),
+          vim.tbl_extend("force", opts, { desc = "Scroll opencode up" })
+        )
+        vim.keymap.set(
+          { "n", "t" },
+          "<C-d>",
+          scroll("session.half.page.down"),
+          vim.tbl_extend("force", opts, { desc = "Scroll opencode down" })
+        )
 
         -- Some terminals can distinguish shifted Ctrl keys; most collapse them to <C-u>/<C-d>.
-        vim.keymap.set("n", "<S-C-u>", function()
-          send_opencode_tui_command("session.half.page.up")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
-        vim.keymap.set("n", "<S-C-d>", function()
-          send_opencode_tui_command("session.half.page.down")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
-        vim.keymap.set("t", "<S-C-u>", function()
-          send_opencode_tui_command("session.half.page.up")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode up" }))
-        vim.keymap.set("t", "<S-C-d>", function()
-          send_opencode_tui_command("session.half.page.down")
-        end, vim.tbl_extend("force", opts, { desc = "Scroll opencode down" }))
+        vim.keymap.set(
+          { "n", "t" },
+          "<S-C-u>",
+          scroll("session.half.page.up"),
+          vim.tbl_extend("force", opts, { desc = "Scroll opencode up" })
+        )
+        vim.keymap.set(
+          { "n", "t" },
+          "<S-C-d>",
+          scroll("session.half.page.down"),
+          vim.tbl_extend("force", opts, { desc = "Scroll opencode down" })
+        )
       end,
     })
   '';
