@@ -100,7 +100,7 @@
                         })
                     elseif title:match("[Gg]rep") then
                         builtin.live_grep({
-                            additional_args = hidden and { "--hidden" } or {},
+                            additional_args = hidden and { "--hidden", "--no-ignore" } or {},
                             default_text = prompt,
                             cwd = cwd,
                         })
