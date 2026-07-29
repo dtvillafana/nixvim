@@ -64,7 +64,7 @@
             action = 'visit',
             args = { parent = true },
           },
-          ['<C-l>'] = {
+          ['<C-Space>'] = {
             action = 'visit',
             args = { cursor = true },
           },
