@@ -58,6 +58,7 @@
                 nixfmt-tree
                 ripgrep
                 xclip
+                xmlformat
                 zoxide
               ];
             };
