@@ -1,4 +1,4 @@
-{ fyler, pkgs, ... }:
+{ pkgs, ... }:
 {
   plugins.mini-icons.enable = true;
   plugins.web-devicons.enable = true;
@@ -6,7 +6,12 @@
   extraPlugins = [
     (pkgs.vimUtils.buildVimPlugin {
       name = "fyler.nvim";
-      src = fyler;
+      src = pkgs.fetchFromGitHub {
+        owner = "FylerOrg";
+        repo = "fyler.nvim";
+        rev = "322c79d446884e9939a958294e6108ae8cfbdb12";
+        hash = "sha256-VdnSV7xKe7C+6IhM6iT/9ZTQNa44CSAOOdHE9ooTVVg=";
+      };
       doCheck = false;
     })
   ];
@@ -65,6 +70,11 @@
             args = { parent = true },
           },
           ['<C-Space>'] = {
+            action = 'visit',
+            args = { cursor = true },
+          },
+          -- Most terminals encode Ctrl-Space as NUL (<C-@>).
+          ['<Nul>'] = {
             action = 'visit',
             args = { cursor = true },
           },
