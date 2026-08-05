@@ -22,6 +22,8 @@ let
         - pager:  ${diffSoFancyWrapper}
           colorArg: always
           useConfig: false
+    services:
+      "ccugitea.capcu.org": "gitea:ccugitea.capcu.org"
   '';
 in
 {
