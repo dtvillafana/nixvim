@@ -74,5 +74,22 @@
             end,
         })
     end
+
+    -- Relay terminal notification requests to the host terminal. tmux only
+    -- forwards these when they are carried in its DCS passthrough envelope.
+    vim.api.nvim_create_autocmd("TermRequest", {
+        callback = function(event)
+            local sequence = event.data.sequence
+            if not sequence:match("^\27]9;") then
+                return
+            end
+
+            if vim.env.TMUX ~= nil then
+                sequence = "\27Ptmux;" .. sequence:gsub("\27", "\27\27") .. "\27\\"
+            end
+
+            vim.api.nvim_ui_send(sequence)
+        end,
+    })
   '';
 }
