@@ -127,7 +127,7 @@ in
     {
       mode = "n";
       key = "<leader>x";
-      action = "<CMD>x<CR>";
+      action = "<CMD>qa!<CR>";
       options = {
         noremap = true;
         silent = true;
