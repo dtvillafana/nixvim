@@ -166,6 +166,14 @@
       find_cmd = 'fd --exclude .git --type f --type l',
       keys = fzf_oil_keys,
       fzf_exec_opts = {
+        winopts = {
+          title = 'fzf-oil',
+          on_create = function(event)
+            for _, key in pairs(fzf_oil_keys) do
+              vim.keymap.set('t', key, key, { buffer = event.bufnr, noremap = true })
+            end
+          end,
+        },
         actions = {
           ['alt-h'] = {
             fn = function()
