@@ -1,6 +1,16 @@
+{ pkgs, ... }:
 {
   plugins = {
     oil = {
+      package = pkgs.vimUtils.buildVimPlugin {
+        name = "oil.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "dtvillafana";
+          repo = "oil.nvim";
+          rev = "master";
+          hash = "sha256-3W8uPPLKVnVfVFB06i1FMmhDVxd5v+hCiPu9ZOnogzg=";
+        };
+      };
       enable = true;
       settings = {
         view_options.show_hidden = true;
