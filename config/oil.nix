@@ -59,6 +59,32 @@
             };
             desc = "oil: Search in directory";
           };
+          ";" = {
+            callback = {
+              __raw = ''
+                function()
+                  local sorts = {
+                    { label = 'modified date', column = 'mtime', order = 'desc' },
+                    { label = 'name', column = 'name', order = 'asc' },
+                    { label = 'size', column = 'size', order = 'desc' },
+                    { label = 'access date', column = 'atime', order = 'desc' },
+                    { label = 'change date', column = 'ctime', order = 'desc' },
+                    { label = 'birth date', column = 'birthtime', order = 'desc' },
+                  }
+                  local index = (vim.b.oil_sort_index or 0) % #sorts + 1
+                  local sort = sorts[index]
+
+                  vim.b.oil_sort_index = index
+                  require('oil').set_sort({
+                    { 'type', 'asc' },
+                    { sort.column, sort.order },
+                  })
+                  vim.notify('Oil sorted by ' .. sort.label)
+                end
+              '';
+            };
+            desc = "oil: Cycle sort order";
+          };
         };
       };
     };
