@@ -71,6 +71,63 @@
                     end
                 end)
             end, "Typst preview go to page")
+            map("<Space>pc", function()
+                vim.cmd.update()
+
+                local source = vim.api.nvim_buf_get_name(event.buf)
+                local output = vim.fn.fnamemodify(source, ":r") .. ".pdf"
+                local source_dir = vim.fs.dirname(source)
+                local candidate = source_dir
+                local project_root
+
+                for _ = 0, 2 do
+                    if vim.uv.fs_stat(candidate .. "/flake.nix") then
+                        project_root = candidate
+                        break
+                    end
+                    candidate = vim.fs.dirname(candidate)
+                end
+                local command
+
+                if project_root and vim.fn.executable("nix") == 1 then
+                    command = {
+                        "nix",
+                        "develop",
+                        project_root,
+                        "--command",
+                        "typst",
+                        "compile",
+                        "--root",
+                        project_root,
+                        source,
+                        output,
+                    }
+                elseif project_root then
+                    command = {
+                        vim.fn.exepath("typst"),
+                        "compile",
+                        "--root",
+                        project_root,
+                        source,
+                        output,
+                    }
+                else
+                    command = { vim.fn.exepath("typst"), "compile", source, output }
+                end
+
+                vim.notify("Compiling " .. vim.fn.fnamemodify(source, ":t"), vim.log.levels.INFO)
+                vim.system(command, { text = true }, function(result)
+                    vim.schedule(function()
+                        if result.code == 0 then
+                            vim.notify("Compiled " .. output, vim.log.levels.INFO)
+                            return
+                        end
+
+                        local message = result.stderr ~= "" and result.stderr or result.stdout
+                        vim.notify(vim.trim(message), vim.log.levels.ERROR)
+                    end)
+                end)
+            end, "Compile Typst document")
         end,
     })
   '';
