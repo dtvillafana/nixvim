@@ -59,8 +59,8 @@
                 })
             end
 
-            map("<Space>pn", typst_preview.next_page, "Typst preview next page")
-            map("<Space>pp", typst_preview.prev_page, "Typst preview previous page")
+            map("<Space>n", typst_preview.next_page, "Typst preview next page")
+            map("<Space>b", typst_preview.prev_page, "Typst preview previous page")
             map("<Space>pf", typst_preview.first_page, "Typst preview first page")
             map("<Space>pl", typst_preview.last_page, "Typst preview last page")
             map("<Space>pg", function()
