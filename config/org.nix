@@ -36,6 +36,7 @@ else
       chromium
       emacs
       tectonic
+      typst
       (texlive.withPackages (
         p: with p; [
           beamer
@@ -153,6 +154,34 @@ else
                         vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
                     end
                     return exporter(command, target, on_success, on_error)
+                end
+              '';
+            };
+            p = {
+              label = "Export to PDF (Typst)";
+              action = lib.generators.mkLuaInline ''
+                function(exporter)
+                    local current_file = vim.api.nvim_buf_get_name(0)
+                    local base = vim.fn.fnamemodify(current_file, ':p:r')
+                    local typst_target = base .. '.typ'
+                    local pdf_target = base .. '.pdf'
+                    local file_escaped = vim.fn.shellescape(current_file)
+                    local typst_escaped = vim.fn.shellescape(typst_target)
+                    local pdf_escaped = vim.fn.shellescape(pdf_target)
+                    local working_directory = vim.fn.shellescape(vim.fn.fnamemodify(current_file, ':p:h'))
+                    local command =
+                      'cd ' .. working_directory .. ' && ' ..
+                      "${pkgs.pandoc}/bin/pandoc --from=org --to=typst --standalone --variable=mainfont='DejaVu Sans' " .. file_escaped .. ' --output=' .. typst_escaped .. ' && ' ..
+                      '${pkgs.typst}/bin/typst compile --font-path=${pkgs.nerd-fonts.dejavu-sans-mono}/share/fonts/truetype/NerdFonts/DejaVuSansM ' .. typst_escaped .. ' ' .. pdf_escaped
+                    local on_success = function(output)
+                        print('Success! exported to ' .. pdf_target .. ' via ' .. typst_target)
+                        vim.api.nvim_echo({ { table.concat(output, '\n') } }, true, {})
+                    end
+                    local on_error = function(err)
+                        print('Error!')
+                        vim.api.nvim_echo({ { table.concat(err, '\n'), 'ErrorMsg' } }, true, {})
+                    end
+                    return exporter(command, pdf_target, on_success, on_error)
                 end
               '';
             };
