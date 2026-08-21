@@ -44,6 +44,7 @@
     ./toggleterm.nix
     ./treesitter.nix
     ./trouble.nix
+    ./typst.nix
     ./whichkey.nix
     ./window-picker.nix
   ];
