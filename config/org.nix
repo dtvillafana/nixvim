@@ -294,8 +294,8 @@ else
         src = pkgs.fetchFromGitHub {
           owner = "hamidi-dev";
           repo = "org-super-agenda.nvim";
-          rev = "main";
-          hash = "sha256-4O7wyPoYFtGLi/TYy9U6kildyr+RCpUsqb0vr4Aovw4=";
+          rev = "a76b1ca965c019f74786a94be6c142fbb84b7719";
+          hash = "sha256-dBKG6TQ9Fd/jZGk0j4DQEHoF29VjpUT0gpAIDDJ/E8k=";
         };
         doCheck = false;
       })
