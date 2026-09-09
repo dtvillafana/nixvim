@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  opencode = lib.getExe pkgs.opencode;
+  opencode2 = lib.getExe pkgs.opencode2;
 in
 {
   plugins = {
@@ -26,47 +26,29 @@ in
     };
     opencode = {
       enable = true;
-      settings.server = {
-        url = lib.nixvim.mkRaw "function(callback) _G.__opencode_ai.url(callback) end";
-        start = lib.nixvim.mkRaw "function() _G.__opencode_ai.start() end";
-        toggle = lib.nixvim.mkRaw "function() _G.__opencode_ai.toggle() end";
+      package = pkgs.vimUtils.buildVimPlugin {
+        name = "opencode.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "dtvillafana";
+          repo = "opencode.nvim";
+          rev = "main";
+          hash = "sha256-ud/FpoyXdoI91IefUuK9vVOzq1yXaDIrCP9we/PGxt4=";
+        };
       };
+      settings.server.start = lib.nixvim.mkRaw "function() _G.__opencode_ai.terminal():open() end";
     };
   };
 
   extraConfigLua = ''
-    local opencode_port
-
-    local function port()
-      if opencode_port then
-        return opencode_port
-      end
-
-      local tcp = assert(vim.uv.new_tcp())
-      assert(tcp:bind("127.0.0.1", 0))
-      opencode_port = assert(tcp:getsockname()).port
-      tcp:close()
-      return opencode_port
-    end
-
-    local function command()
-      return "${opencode} --port " .. port()
-    end
-
-    local terminal_opts = {
-      split = "below",
-      height = math.floor(vim.o.lines * 0.3),
-    }
-
     _G.__opencode_ai = {
-      url = function(callback)
-        callback("http://127.0.0.1:" .. port())
-      end,
-      start = function()
-        require("opencode.terminal").open(command(), terminal_opts)
-      end,
-      toggle = function()
-        require("opencode.terminal").toggle(command(), terminal_opts)
+      terminal = function()
+        return require("toggleterm.terminal").Terminal:new({
+          cmd = "${opencode2}",
+          hidden = true,
+          direction = "horizontal",
+          display_name = "opencode",
+          id = 99,
+        })
       end,
     }
   '';
@@ -96,7 +78,7 @@ in
         "t"
       ];
       key = "<leader>a.";
-      action.__raw = ''function() require("opencode").toggle() end'';
+      action.__raw = ''function() _G.__opencode_ai.terminal():toggle() end'';
       options.desc = "Toggle opencode";
     }
     {
@@ -119,18 +101,6 @@ in
         desc = "Add line to opencode";
         expr = true;
       };
-    }
-    {
-      mode = "n";
-      key = "<S-C-u>";
-      action.__raw = ''function() require("opencode").command("session.half.page.up") end'';
-      options.desc = "Scroll opencode up";
-    }
-    {
-      mode = "n";
-      key = "<S-C-d>";
-      action.__raw = ''function() require("opencode").command("session.half.page.down") end'';
-      options.desc = "Scroll opencode down";
     }
   ];
 }
