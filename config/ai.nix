@@ -32,7 +32,7 @@ in
           owner = "dtvillafana";
           repo = "opencode.nvim";
           rev = "main";
-          hash = "sha256-ud/FpoyXdoI91IefUuK9vVOzq1yXaDIrCP9we/PGxt4=";
+          hash = "sha256-Kdn/Qk0y3Grtz2xq/o5EQkYgoSIh5Kv+pIuqp/tiOtY=";
         };
       };
       settings.server.start = lib.nixvim.mkRaw "function() _G.__opencode_ai.terminal():open() end";
