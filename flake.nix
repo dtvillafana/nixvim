@@ -31,7 +31,6 @@
               (final: prev: {
                 claude-code = inputs.llm-agents.packages.${system}.claude-code;
                 grok = inputs.llm-agents.packages.${system}.grok;
-                opencode = inputs.llm-agents.packages.${system}.opencode;
                 opencode2 = inputs.llm-agents.packages.${system}.opencode2;
               })
             ];
