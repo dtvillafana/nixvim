@@ -30,6 +30,7 @@
             overlays = [
               (final: prev: {
                 claude-code = inputs.llm-agents.packages.${system}.claude-code;
+                grok = inputs.llm-agents.packages.${system}.grok;
                 opencode = inputs.llm-agents.packages.${system}.opencode;
                 opencode2 = inputs.llm-agents.packages.${system}.opencode2;
               })
@@ -40,27 +41,26 @@
           nixvimModule = {
             module = {
               imports = [ ./config ]; # import the modules directly
-              extraPackages =
-                with pkgs;
-                [
-                  ansible
-                  ansible-lint
-                  (if stdenv.isLinux then btop-cuda else btop)
-                  diff-so-fancy
-                  emacs
-                  fd
-                  ghostscript_headless
-                  gnupg
-                  imagemagick
-                  lazygit
-                  nix-direnv
-                  nixfmt-tree
-                  opencode2
-                  ripgrep
-                  xclip
-                  xmlformat
-                  zoxide
-                ];
+              extraPackages = with pkgs; [
+                ansible
+                ansible-lint
+                (if stdenv.isLinux then btop-cuda else btop)
+                diff-so-fancy
+                emacs
+                fd
+                ghostscript_headless
+                gnupg
+                grok
+                imagemagick
+                lazygit
+                nix-direnv
+                nixfmt-tree
+                opencode2
+                ripgrep
+                xclip
+                xmlformat
+                zoxide
+              ];
             };
             # You can use `extraSpecialArgs` to pass additional arguments to your module files
             extraSpecialArgs = {

@@ -1,5 +1,6 @@
 { lib, pkgs, ... }:
 let
+  grok = lib.getExe pkgs.grok;
   opencode2 = lib.getExe pkgs.opencode2;
 in
 {
@@ -40,6 +41,17 @@ in
   };
 
   extraConfigLua = ''
+    _G.__grok_ai = {
+      terminal = function()
+        return require("toggleterm.terminal").Terminal:new({
+          cmd = "${grok}",
+          hidden = true,
+          direction = "horizontal",
+          display_name = "grok",
+          id = 98,
+        })
+      end,
+    }
     _G.__opencode_ai = {
       terminal = function()
         return require("toggleterm.terminal").Terminal:new({
@@ -77,8 +89,17 @@ in
         "n"
         "t"
       ];
+      key = "<leader>ag";
+      action.__raw = "function() _G.__grok_ai.terminal():toggle() end";
+      options.desc = "Toggle grok";
+    }
+    {
+      mode = [
+        "n"
+        "t"
+      ];
       key = "<leader>a.";
-      action.__raw = ''function() _G.__opencode_ai.terminal():toggle() end'';
+      action.__raw = "function() _G.__opencode_ai.terminal():toggle() end";
       options.desc = "Toggle opencode";
     }
     {
