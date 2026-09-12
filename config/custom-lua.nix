@@ -181,7 +181,10 @@
         return nil
       end
 
-      local function execute_map(info)
+      -- Feedkeys of a <Cmd> RHS runs after this mapping returns, so
+      -- vim.v.count would be 0 (e.g. 2<leader>tf for toggleterm). Run
+      -- callbacks and <Cmd> mappings now, while the count is still set.
+      local function execute_map(info, count)
         if info.callback then
           local result = info.callback()
           if info.expr == 1 and type(result) == "string" and result ~= "" then
@@ -192,12 +195,26 @@
           end
           return
         end
-        local rhs = vim.api.nvim_replace_termcodes(info.rhs, true, true, true)
-        vim.api.nvim_feedkeys(rhs, info.noremap == 1 and "n" or "m", false)
+        local rhs = info.rhs
+        local cmd = type(rhs) == "string"
+          and (
+            rhs:match("^<[Cc][Mm][Dd]>(.-)<[Cc][Rr]>$")
+            or rhs:match("^<[Cc][Mm][Dd]>(.-)\r$")
+          )
+        if cmd then
+          vim.cmd(cmd)
+          return
+        end
+        local keys = vim.api.nvim_replace_termcodes(rhs, true, true, true)
+        if count > 0 then
+          keys = tostring(count) .. keys
+        end
+        vim.api.nvim_feedkeys(keys, info.noremap == 1 and "n" or "m", false)
       end
 
       local function intercept_leader()
         local mode = map_mode()
+        local count = vim.v.count
         local keys = leader_raw()
         while has_longer_mapping(keys, mode) do
           local c = wait_char(vim.o.timeoutlen)
@@ -221,8 +238,11 @@
 
         local info = lookup_map(keys, mode)
         if info then
-          execute_map(info)
+          execute_map(info, count)
         else
+          if count > 0 then
+            keys = tostring(count) .. keys
+          end
           vim.api.nvim_feedkeys(keys, "n", false)
         end
       end
