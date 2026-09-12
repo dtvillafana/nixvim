@@ -91,5 +91,168 @@
             vim.api.nvim_ui_send(sequence)
         end,
     })
+
+    -- TUI jobs (OpenCode, btop, …) emit a constant stream of redraws. Neovim
+    -- treats that job activity as interrupting 'timeoutlen', so mapped
+    -- sequences never complete. Collect the chord in Lua instead of using
+    -- Neovim's mapping timeout, then dispatch the matching mapping.
+    do
+      local function wait_char(timeout_ms)
+        local deadline = vim.uv.now() + timeout_ms
+        while vim.uv.now() < deadline do
+          local c = vim.fn.getcharstr(0)
+          if type(c) == "string" and c ~= "" then
+            return c
+          end
+          vim.wait(10)
+        end
+        return nil
+      end
+
+      local function map_mode()
+        local mode = vim.api.nvim_get_mode().mode
+        if mode == "t" then
+          return "t"
+        end
+        if mode:find("^[vV\22]") then
+          return "x"
+        end
+        if mode:sub(1, 2) == "nt" or mode:sub(1, 1) == "n" then
+          return "n"
+        end
+        return mode:sub(1, 1)
+      end
+
+      local function mapping_lhs_raw(m)
+        if type(m.lhsraw) == "string" and m.lhsraw ~= "" then
+          return m.lhsraw
+        end
+        return vim.api.nvim_replace_termcodes(m.lhs, true, true, true)
+      end
+
+      local function has_longer_mapping(collected, mode)
+        local collected_t = vim.fn.keytrans(collected)
+        local maps = vim.api.nvim_get_keymap(mode)
+        local ok, buf_maps = pcall(vim.api.nvim_buf_get_keymap, 0, mode)
+        if ok then
+          vim.list_extend(maps, buf_maps)
+        end
+        for _, m in ipairs(maps) do
+          local lhs = mapping_lhs_raw(m)
+          if #lhs > #collected and lhs:sub(1, #collected) == collected then
+            return true
+          end
+          local lhs_t = vim.fn.keytrans(lhs)
+          if #lhs_t > #collected_t and lhs_t:sub(1, #collected_t) == collected_t then
+            return true
+          end
+        end
+        return false
+      end
+
+      local function leader_raw()
+        local leader = vim.g.mapleader
+        if type(leader) ~= "string" or leader == "" then
+          leader = "\\"
+        end
+        return vim.api.nvim_replace_termcodes(leader, true, true, true)
+      end
+
+      local function lookup_map(keys, mode)
+        local rest = keys:sub(#leader_raw() + 1)
+        local candidates = {
+          keys,
+          vim.fn.keytrans(keys),
+          "<leader>" .. rest,
+          "<Space>" .. rest,
+        }
+        for _, cand in ipairs(candidates) do
+          local info = vim.fn.maparg(cand, mode, false, true)
+          if
+            type(info) == "table"
+            and (info.callback or (info.rhs and info.rhs ~= ""))
+            and info.lhs ~= "<leader>"
+            and info.lhs ~= "<Space>"
+            and info.lhs ~= " "
+          then
+            return info
+          end
+        end
+        return nil
+      end
+
+      local function execute_map(info)
+        if info.callback then
+          local result = info.callback()
+          if info.expr == 1 and type(result) == "string" and result ~= "" then
+            if info.replace_keycodes == 1 then
+              result = vim.api.nvim_replace_termcodes(result, true, true, true)
+            end
+            vim.api.nvim_feedkeys(result, "n", false)
+          end
+          return
+        end
+        local rhs = vim.api.nvim_replace_termcodes(info.rhs, true, true, true)
+        vim.api.nvim_feedkeys(rhs, info.noremap == 1 and "n" or "m", false)
+      end
+
+      local function intercept_leader()
+        local mode = map_mode()
+        local keys = leader_raw()
+        while has_longer_mapping(keys, mode) do
+          local c = wait_char(vim.o.timeoutlen)
+          if not c then
+            break
+          end
+          keys = keys .. c
+        end
+
+        if keys == leader_raw() then
+          if mode == "t" then
+            vim.api.nvim_feedkeys(keys, "n", false)
+            return
+          end
+          local wk_ok, wk = pcall(require, "which-key")
+          if wk_ok and wk.show then
+            wk.show({ keys = vim.g.mapleader, mode = mode })
+          end
+          return
+        end
+
+        local info = lookup_map(keys, mode)
+        if info then
+          execute_map(info)
+        else
+          vim.api.nvim_feedkeys(keys, "n", false)
+        end
+      end
+
+      vim.keymap.set({ "n", "x", "t" }, "<leader>", intercept_leader, {
+        nowait = true,
+        silent = true,
+        desc = "Leader (collect sequence outside timeoutlen)",
+      })
+
+      local function intercept_insert_seq(first, second)
+        vim.keymap.set("i", first, function()
+          local c = wait_char(vim.o.timeoutlen)
+          if c == second then
+            return "<Esc>"
+          end
+          if not c then
+            return first
+          end
+          return first .. c
+        end, {
+          expr = true,
+          nowait = true,
+          silent = true,
+          replace_keycodes = true,
+        })
+      end
+
+      intercept_insert_seq("j", "k")
+      intercept_insert_seq("k", "j")
+    end
   '';
 }
