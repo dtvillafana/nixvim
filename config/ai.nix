@@ -36,7 +36,7 @@ in
           hash = "sha256-Kdn/Qk0y3Grtz2xq/o5EQkYgoSIh5Kv+pIuqp/tiOtY=";
         };
       };
-      settings.server.start = lib.nixvim.mkRaw "function() _G.__opencode_ai.terminal():open() end";
+      settings.server.start = lib.nixvim.mkRaw "function() _G.__opencode_ai.ensure_service() end";
     };
   };
 
@@ -53,14 +53,29 @@ in
       end,
     }
     _G.__opencode_ai = {
+      ensure_service = function()
+        vim.system({ "${opencode2}", "api", "get", "/api/server" }, { text = true })
+      end,
       terminal = function()
-        return require("toggleterm.terminal").Terminal:new({
+        local term = _G.__opencode_ai._term
+        if term and (not term.bufnr or vim.api.nvim_buf_is_valid(term.bufnr)) then
+          return term
+        end
+
+        local registered = require("toggleterm.terminal").get(99, true)
+        if registered then
+          _G.__opencode_ai._term = registered
+          return registered
+        end
+
+        _G.__opencode_ai._term = require("toggleterm.terminal").Terminal:new({
           cmd = "${opencode2}",
           hidden = true,
           direction = "horizontal",
           display_name = "opencode",
           id = 99,
         })
+        return _G.__opencode_ai._term
       end,
     }
   '';
