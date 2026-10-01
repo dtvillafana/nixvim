@@ -111,9 +111,6 @@
 
       local function map_mode()
         local mode = vim.api.nvim_get_mode().mode
-        if mode == "t" then
-          return "t"
-        end
         if mode:find("^[vV\22]") then
           return "x"
         end
@@ -225,10 +222,6 @@
         end
 
         if keys == leader_raw() then
-          if mode == "t" then
-            vim.api.nvim_feedkeys(keys, "n", false)
-            return
-          end
           local wk_ok, wk = pcall(require, "which-key")
           if wk_ok and wk.show then
             wk.show({ keys = vim.g.mapleader, mode = mode })
@@ -247,7 +240,8 @@
         end
       end
 
-      vim.keymap.set({ "n", "x", "t" }, "<leader>", intercept_leader, {
+      -- Leave leader keys literal in insert and terminal-input modes.
+      vim.keymap.set({ "n", "x" }, "<leader>", intercept_leader, {
         nowait = true,
         silent = true,
         desc = "Leader (collect sequence outside timeoutlen)",

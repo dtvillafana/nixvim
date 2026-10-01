@@ -15,7 +15,7 @@ in
         keymaps = {
           toggle = {
             normal = "<leader>a,";
-            terminal = "<leader>a,";
+            terminal = false;
             variants = {
               continue = "<leader>ac";
             };
@@ -100,19 +100,13 @@ in
       options.desc = "Execute opencode action…";
     }
     {
-      mode = [
-        "n"
-        "t"
-      ];
+      mode = "n";
       key = "<leader>ag";
       action.__raw = "function() _G.__grok_ai.terminal():toggle() end";
       options.desc = "Toggle grok";
     }
     {
-      mode = [
-        "n"
-        "t"
-      ];
+      mode = "n";
       key = "<leader>a.";
       action.__raw = "function() _G.__opencode_ai.terminal():toggle() end";
       options.desc = "Toggle opencode";
