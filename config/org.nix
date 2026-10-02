@@ -21,12 +21,12 @@ else
     };
     org_treesitter = pkgs.tree-sitter.buildGrammar {
       language = "org";
-      version = "2.0.3";
+      version = "2.0.4";
       src = pkgs.fetchFromGitHub {
         owner = "nvim-orgmode";
         repo = "tree-sitter-org";
-        rev = "next";
-        hash = "sha256-Ok4BlEshQSAxxIdqPWgYx82ksqm6XJ5G9oXpD94Oozg=";
+        rev = "2.0.4";
+        hash = "sha256-76ImC8GMW+yAKG++AHryUi+MYTmtJ5ogygC+bgNMErA=";
       };
       meta.homepage = "https://github.com/nvim-orgmode/tree-sitter-org";
     };
@@ -64,10 +64,10 @@ else
         package = pkgs.vimUtils.buildVimPlugin {
           name = "orgmode";
           src = pkgs.fetchFromGitHub {
-            owner = "dtvillafana";
+            owner = "nvim-orgmode";
             repo = "orgmode";
-            rev = "personal";
-            hash = "sha256-lMm0j6qsWK1BRTveslY7xTT5xKUbsQynVi1mZRxa/Xg=";
+            rev = "3a3d115cedee657afc0a9ef1c24eab26ccfff6f6";
+            hash = "sha256-EfoKuek9qywWBjuBfsx9VZv/QcjYNvq++R1maE8XJt8=";
           };
           doCheck = false;
           postPatch = ''
