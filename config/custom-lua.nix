@@ -73,6 +73,23 @@
                 end
             end,
         })
+    else
+        -- tmux forwards DISPLAY but not WAYLAND_DISPLAY. extraPackages includes
+        -- xclip, so Neovim then owns the XWayland selection instead of the
+        -- Hyprland clipboard. Import the compositor socket before the clipboard
+        -- provider loads; wl-copy is preferred once WAYLAND_DISPLAY is set.
+        if vim.env.WAYLAND_DISPLAY == nil or vim.env.WAYLAND_DISPLAY == "" then
+            local runtime = vim.env.XDG_RUNTIME_DIR
+            if runtime and runtime ~= "" and vim.fn.executable("systemctl") == 1 then
+                local show = vim.fn.system({ "systemctl", "--user", "show-environment" })
+                if vim.v.shell_error == 0 then
+                    local value = show:match("WAYLAND_DISPLAY=([^\r\n]+)")
+                    if value and value ~= "" and vim.uv.fs_stat(runtime .. "/" .. value) then
+                        vim.env.WAYLAND_DISPLAY = value
+                    end
+                end
+            end
+        end
     end
 
     -- Relay terminal notification requests to the host terminal. tmux only
