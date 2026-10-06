@@ -37,6 +37,24 @@
             };
             desc = "oil: Select entry and record file directory";
           };
+          yp = {
+            callback = {
+              __raw = ''
+                function()
+                  local oil = require('oil')
+                  local entry = oil.get_cursor_entry()
+                  local dir = oil.get_current_dir()
+
+                  if entry and dir then
+                    local path = dir .. entry.name
+                    vim.fn.setreg('"', path, 'v')
+                    vim.fn.setreg('+', path, 'v')
+                  end
+                end
+              '';
+            };
+            desc = "oil: Yank full path";
+          };
           gs = {
             callback = {
               __raw = ''
