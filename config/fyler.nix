@@ -9,8 +9,8 @@
       src = pkgs.fetchFromGitHub {
         owner = "FylerOrg";
         repo = "fyler.nvim";
-        rev = "322c79d446884e9939a958294e6108ae8cfbdb12";
-        hash = "sha256-VdnSV7xKe7C+6IhM6iT/9ZTQNa44CSAOOdHE9ooTVVg=";
+        rev = "main";
+        hash = "sha256-zSqo9RTEvbJwicBHfly3zyy+z4EOk7gYXQmaYnVj368=";
       };
       doCheck = false;
     })
@@ -61,6 +61,16 @@
       },
       mappings = {
         n = {
+          ['gx'] = {
+            action = function(self)
+              local entry = require('fyler.finder').parse_cursor_line(self)
+              if not entry then return end
+
+              local _, err = vim.ui.open(entry.path)
+              if err then vim.notify(err, vim.log.levels.ERROR) end
+            end,
+            desc = 'Open with system handler',
+          },
           ['<CR>'] = {
             action = 'select',
             args = { pick = true },
