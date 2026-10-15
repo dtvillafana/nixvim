@@ -64,10 +64,10 @@ else
         package = pkgs.vimUtils.buildVimPlugin {
           name = "orgmode";
           src = pkgs.fetchFromGitHub {
-            owner = "nvim-orgmode";
+            owner = "dtvillafana";
             repo = "orgmode";
-            rev = "3a3d115cedee657afc0a9ef1c24eab26ccfff6f6";
-            hash = "sha256-EfoKuek9qywWBjuBfsx9VZv/QcjYNvq++R1maE8XJt8=";
+            rev = "4625b5639fb871692765d4d54bc9601dec7729a2";
+            hash = "sha256-OF/cZdsRVZOrGeLnXUG6uy1M5QqLLXxl6eNAA7P0Fdo=";
           };
           doCheck = false;
           postPatch = ''
