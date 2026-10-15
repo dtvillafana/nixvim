@@ -66,8 +66,8 @@ else
           src = pkgs.fetchFromGitHub {
             owner = "dtvillafana";
             repo = "orgmode";
-            rev = "4625b5639fb871692765d4d54bc9601dec7729a2";
-            hash = "sha256-OF/cZdsRVZOrGeLnXUG6uy1M5QqLLXxl6eNAA7P0Fdo=";
+            rev = "d1a763eced7a78ab9ebe9ba57c06f060d6543cf7";
+            hash = "sha256-Pr9qtFGp8S5WxszpShB3Lz01HRMFoDNWrISpQlITJt0=";
           };
           doCheck = false;
           postPatch = ''
