@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2605.0";
-    llm-agents.url = "https://hermes-agent.nousresearch.com/flake.nix";
+    llm-agents.url = "github:numtide/llm-agents.nix";
     nixvim = {
       url = "github:dtvillafana/nixvim-for-pr";
       inputs.nixpkgs.follows = "nixpkgs";
